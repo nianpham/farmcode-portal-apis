@@ -2,58 +2,58 @@ const { statusCode, successMessage, failMessage } = require('~/common/message');
 const { iattService } = require("~/service");
 const {iattValidation} = require('~/validation');
 
-async function getAllBlogs(request, reply) {
+async function getAllOrders(request, reply) {
   try {
-    const data = await iattService.blog.getAllBlogs()
+    const data = await iattService.order.getAllOrders()
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
   }
 }
 
-async function getBlog(request, reply) {
+async function getOrder(request, reply) {
   try {
     const { id } = request.params;
-    const data = await iattService.blog.getBlog(id)
+    const data = await iattService.order.getOrder(id)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
   }
 }
 
-async function createBlog(request, reply) {
+async function createOrder(request, reply) {
   try {
-    const blog = request.body;
-    const check = iattValidation.validate(blog, iattValidation.BlogSchema.CreateBlogSchema, reply);
-    if (check === false) {
-      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    };
-    const data = await iattService.blog.createBlog(blog);
+    const Order = request.body;
+    // const check = iattValidation.validate(Order, iattValidation.OrderSchema.CreateOrderSchema, reply);
+    // if (check === false) {
+    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    // };
+    const data = await iattService.order.createOrder(Order);
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
   }
 }
 
-async function updateBlog(request, reply) {
-  try {
-    const { id } = request.params;
-    const blog = request.body;
-    const check = iattValidation.validate(blog, iattValidation.BlogSchema.UpdateBlogSchema, reply);
-    if (check === false) {
-      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    };
-    const data = await iattService.blog.updateBlog(id, blog);
-    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
-  } catch (err) {
-    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
-  }
-}
-
-async function deleteBlog(request, reply) {
+async function updateOrder(request, reply) {
   try {
     const { id } = request.params;
-    const data = await iattService.blog.deleteBlog(id);
+    const Order = request.body;
+    // const check = iattValidation.validate(Order, iattValidation.OrderSchema.UpdateOrderSchema, reply);
+    // if (check === false) {
+    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    // };
+    const data = await iattService.order.updateOrder(id, Order);
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+async function deleteOrder(request, reply) {
+  try {
+    const { id } = request.params;
+    const data = await iattService.order.deleteOrder(id);
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
@@ -61,9 +61,9 @@ async function deleteBlog(request, reply) {
 }
 
 module.exports = {
-  getAllBlogs,
-  getBlog,
-  createBlog,
-  updateBlog,
-  deleteBlog
+  getAllOrders,
+  getOrder,
+  createOrder,
+  updateOrder,
+  deleteOrder
 };

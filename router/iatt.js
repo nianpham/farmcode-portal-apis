@@ -2,6 +2,7 @@ const { iattController } = require('~/controller');
 const fastifyPassport = require('@fastify/passport');
 
 function iattRoute(fastify, options, done) {
+    
     fastify.post('/auth/login', iattController.auth.login);
     // fastify.post('/auth/login/google', iattController.auth.loginWithGoogle);
     fastify.get(
@@ -44,8 +45,23 @@ function iattRoute(fastify, options, done) {
             }
         }
     );
-    fastify.get('/product/get-all', iattController.product.getAllProducts);
-    fastify.get('/blog/get-all', iattController.blog.getAllBlogs);
+    fastify.get('/product/', iattController.product.getAllProducts);
+    fastify.get('/product/:id', iattController.product.getProduct);
+    fastify.post('/product/', iattController.product.createProduct);
+    fastify.put('/product/:id', iattController.product.updateProduct);
+    fastify.delete('/product/:id', iattController.product.deleteProduct);
+
+    fastify.get('/blog/', iattController.blog.getAllBlogs);
+    fastify.get('/blog/:id', iattController.blog.getBlog);
+    fastify.post('/blog/', iattController.blog.createBlog);
+    fastify.put('/blog/:id', iattController.blog.updateBlog);
+    fastify.delete('/blog/:id', iattController.blog.deleteBlog);
+
+    fastify.get('/order/', iattController.order.getAllOrders);
+    fastify.get('/order/:id', iattController.order.getOrder);
+    fastify.post('/order/', iattController.order.createOrder);
+    fastify.put('/order/:id', iattController.order.updateOrder);
+    fastify.delete('/order/:id', iattController.order.deleteOrder);
     done();
 }
 

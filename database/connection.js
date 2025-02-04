@@ -15,6 +15,7 @@ let db = null;
 let _ecokaProductCol = null;
 let _iattProductCol = null;
 let _iattBlogCol = null;
+let _iattOrderCol = null;
 
 async function connection(cb) {
   if (db) {
@@ -30,6 +31,7 @@ async function connection(cb) {
     _ecokaProductCol = db.collection('ecoka_products');
     _iattProductCol = db.collection('iatt_products');
     _iattBlogCol = db.collection('iatt_blogs');
+    _iattOrderCol = db.collection('iatt_orders');
     await marketWarehouse.createIndex({
       created_at: 1,
       updated_at: 1,
@@ -46,10 +48,12 @@ async function connection(cb) {
 const ecokaProductCol = () => _ecokaProductCol;
 const iattProductCol = () => _iattProductCol;
 const iattBlogCol = () => _iattBlogCol;
+const iattOrderCol = () => _iattOrderCol;
 
 module.exports = {
   connection,
   ecokaProductCol,
   iattProductCol,
   iattBlogCol,
+  iattOrderCol,
 };

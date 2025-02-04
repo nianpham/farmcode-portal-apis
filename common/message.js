@@ -19,6 +19,8 @@ const failMessage = {
     'index': 'FAILED',
     'server': 'Server is not running',
     'internalError': 'Internal Server Error',
+    'invalidData': 'Data is invalid',
+    'emptyData': 'Data is empty',
 }
 
 module.exports = { statusCode, successMessage, failMessage }
