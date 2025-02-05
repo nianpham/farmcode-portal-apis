@@ -21,7 +21,19 @@ async function getAccount(request, reply) {
     }
 }
 
+async function updateProfile(request, reply) {
+  try {
+    const { id } = request.params;
+    const body = request.body
+    const data = await iattService.account.updateProfile(id, body)
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
 module.exports = {
     getAllAccounts,
-    getAccount
+    getAccount,
+    updateProfile
 };

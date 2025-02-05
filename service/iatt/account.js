@@ -19,9 +19,14 @@ async function getAccount(id) {
     return iattModel.account.findOne({ _id: new ObjectId(id) });
 }
 
+async function updateProfile(id, data) {
+    return iattModel.account.updateOne({ _id: new ObjectId(id) }, data);
+  }
+
 module.exports = {
     getAllAccounts,
     getAccountByEmail,
     createAccount,
-    getAccount
+    getAccount,
+    updateProfile
 };

@@ -28,6 +28,7 @@ function iattRoute(fastify, options, done) {
 
     fastify.get('/account/', iattController.account.getAllAccounts);
     fastify.get('/account/:id', iattController.account.getAccount);
+    fastify.post('/account/update/:id', iattController.account.updateProfile);
 
     fastify.get('/product/', iattController.product.getAllProducts);
     fastify.get('/product/:id', iattController.product.getProduct);
