@@ -33,14 +33,13 @@ async function loginWithGoogle(request, reply) {
         name: request.user?.displayName,
         status: true,
         role: 'personal',
-        avatar: '',
+        avatar: request?.user?.picture,
       };
       const newUser = await iattService.account.createAccount(dataAccount);
       reply.redirect(
         `${process.env.CLIENT_URL}/sso?account_id=${newUser?.insertedId}`
       );
     }
-
   } catch (error) {
     reply.redirect(`${process.env.CLIENT_URL}/sso?account_id=null`);
   }

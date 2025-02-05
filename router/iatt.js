@@ -2,9 +2,7 @@ const { iattController } = require('~/controller');
 const fastifyPassport = require('@fastify/passport');
 
 function iattRoute(fastify, options, done) {
-    
     fastify.post('/auth/login', iattController.auth.login);
-    // fastify.post('/auth/login/google', iattController.auth.loginWithGoogle);
     fastify.get(
         '/auth/login/google',
         {
@@ -48,6 +46,7 @@ function iattRoute(fastify, options, done) {
     fastify.post('/order/', iattController.order.createOrder);
     fastify.put('/order/:id', iattController.order.updateOrder);
     fastify.delete('/order/:id', iattController.order.deleteOrder);
+    
     done();
 }
 
