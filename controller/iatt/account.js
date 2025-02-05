@@ -35,5 +35,5 @@ async function updateProfile(request, reply) {
 module.exports = {
     getAllAccounts,
     getAccount,
-    updateProfile
+    updateProfile,
 };

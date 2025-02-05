@@ -20,7 +20,7 @@ async function login(request, reply) {
 async function loginWithGoogle(request, reply) {
   try {
     console.log(request.user);
-    const data = await iattService.account.getAccountByEmail(request.user?.emails[0]?.value?.toLowerCase());
+    const data = await iattService.account.getAccountByEmail({"email": request.user?.emails[0]?.value?.toLowerCase()});
     if (data) {
       reply.redirect(
         `${process.env.CLIENT_URL}/sso?account_id=${data?._id}`
