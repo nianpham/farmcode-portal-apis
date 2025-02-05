@@ -21,6 +21,8 @@ const failMessage = {
     'internalError': 'Internal Server Error',
     'invalidData': 'Data is invalid',
     'emptyData': 'Data is empty',
+    'unvalidAccount': 'Email is not existed',
+    'unvalidPassword': 'Password is not correct',
 }
 
 module.exports = { statusCode, successMessage, failMessage }

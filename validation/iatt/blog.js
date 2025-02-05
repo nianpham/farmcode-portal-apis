@@ -5,7 +5,6 @@ const CreateBlogSchema = Joi.object().keys({
   content: Joi.string().required(),
   tag: Joi.string().max(50).required(),
   author: Joi.string().max(100).required(),
-  date: Joi.date().iso().required(),
   thumbnail: Joi.string().uri().required(),
 });
 
@@ -14,7 +13,6 @@ const UpdateBlogSchema = Joi.object().keys({
   content: Joi.string().optional(),
   tag: Joi.string().max(50).optional(),
   author: Joi.string().max(100).optional(),
-  date: Joi.date().iso().optional(),
   thumbnail: Joi.string().uri().optional(),
 });
 
