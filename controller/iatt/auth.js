@@ -4,7 +4,7 @@ const { iattService } = require("~/service");
 async function login(request, reply) {
   try {
     const data = request.body
-    const user = await iattService.account.getAccountByEmail(data);
+    const user = await iattService.account.getAccountByAccountLogin(data);
     if (!user) {
       reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
     }
@@ -32,8 +32,16 @@ async function loginWithGoogle(request, reply) {
         password: '',
         name: request.user?.displayName,
         status: true,
+        phone: '',
         role: 'personal',
         avatar: request?.user?.picture,
+        address: '',
+        ward: '',
+        district: 0,
+        province: 0,
+        districtName: '',
+        provinceName: '',
+        wardName: '',
       };
       const newUser = await iattService.account.createAccount(dataAccount);
       reply.redirect(

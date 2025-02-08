@@ -6,6 +6,7 @@ async function find(query) {
 async function insertOne(data) {
   return database.iattProductCol().insertOne({
     ...data,
+    sold: 0,
     created_at: new Date(),
   });
 }

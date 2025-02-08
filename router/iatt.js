@@ -43,6 +43,7 @@ function iattRoute(fastify, options, done) {
     fastify.delete('/blog/:id', iattController.blog.deleteBlog);
 
     fastify.get('/order/', iattController.order.getAllOrders);
+    fastify.get('/order/get-all/:id', iattController.order.getAllOrdersById);
     fastify.get('/order/:id', iattController.order.getOrder);
     fastify.post('/order/', iattController.order.createOrder);
     fastify.put('/order/:id', iattController.order.updateOrder);

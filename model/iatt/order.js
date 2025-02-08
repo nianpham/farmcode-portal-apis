@@ -6,6 +6,7 @@ async function find(query) {
 async function insertOne(data) {
   return database.iattOrderCol().insertOne({
     ...data,
+    status: 'pending',
     created_at: new Date(),
   });
 }

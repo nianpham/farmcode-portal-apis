@@ -11,6 +11,16 @@ async function getAllOrders(request, reply) {
   }
 }
 
+async function getAllOrdersById(request, reply) {
+  try {
+    const { id } = request.params;
+    const data = await iattService.order.getAllOrdersById(id)
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
 async function getOrder(request, reply) {
   try {
     const { id } = request.params;
@@ -29,9 +39,13 @@ async function createOrder(request, reply) {
     //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
     // };
     const data = await iattService.order.createOrder(Order);
+    if (data === 'invalidEmail') {
+      return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
+    }
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+    console.log(err)
   }
 }
 
@@ -65,5 +79,6 @@ module.exports = {
   getOrder,
   createOrder,
   updateOrder,
-  deleteOrder
+  deleteOrder,
+  getAllOrdersById
 };
