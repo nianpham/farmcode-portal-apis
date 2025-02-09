@@ -16,11 +16,11 @@ async function updateBlog(id, data) {
 }
 
 async function createBlog(data) {
-  const data_account = {
+  const data_insert = {
     ...data,
-    author_id: '67a8779e9ce92c2626f05d66',
+    author_id: new ObjectId('67a8779e9ce92c2626f05d66'),
   };
-  return await ieltsvietModel.blog.insertOne(data);
+  return await ieltsvietModel.blog.insertOne(data_insert);
 }
 
 async function deleteBlog(id) {
