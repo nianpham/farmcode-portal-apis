@@ -11,17 +11,28 @@ async function getAllSliders(request, reply) {
   }
 }
 
-async function updateSliders(request, reply) {
+async function createSlider(request, reply) {
     try {
       body = request.body;
-      const data = await ieltsvietService.slider.updateSlider(body)
+      const data = await ieltsvietService.slider.createSlider(body);
       return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
     } catch (err) {
       reply.status(statusCode.internalError).send({ message: failMessage.internalError });
     }
+}
+
+async function deleteSlider(request, reply) {
+  try {
+    const { id } = request.params;
+    const data = await ieltsvietService.slider.deleteSlider(id);
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
   }
+}
 
 module.exports = {
     getAllSliders,
-    updateSliders,
+    createSlider,
+    deleteSlider,
 };

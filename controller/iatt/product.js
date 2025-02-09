@@ -1,6 +1,6 @@
 const { statusCode, successMessage, failMessage } = require('~/common/message');
 const { iattService } = require("~/service");
-const {iattValidation} = require('~/validation');
+const { iattValidation } = require('~/validation');
 
 async function getAllProducts(request, reply) {
   try {

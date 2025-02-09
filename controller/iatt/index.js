@@ -3,5 +3,5 @@ module.exports = {
   blog: require('~/controller/iatt/blog'),
   order: require('~/controller/iatt/order'),
   auth: require('~/controller/iatt/auth'),
-  account:  require('~/controller/iatt/account'),
+  account: require('~/controller/iatt/account'),
 };

@@ -1,6 +1,6 @@
 const { statusCode, successMessage, failMessage } = require('~/common/message');
 const { iattService } = require("~/service");
-const {iattValidation} = require('~/validation');
+const { iattValidation } = require('~/validation');
 
 async function getAllAccounts(request, reply) {
   try {
@@ -12,13 +12,13 @@ async function getAllAccounts(request, reply) {
 }
 
 async function getAccount(request, reply) {
-    try {
-      const { id } = request.params;
-      const data = await iattService.account.getAccount(id)
-      return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
-    } catch (err) {
-      reply.status(statusCode.internalError).send({ message: failMessage.internalError });
-    }
+  try {
+    const { id } = request.params;
+    const data = await iattService.account.getAccount(id)
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
 }
 
 async function updateProfile(request, reply) {
@@ -33,7 +33,7 @@ async function updateProfile(request, reply) {
 }
 
 module.exports = {
-    getAllAccounts,
-    getAccount,
-    updateProfile,
+  getAllAccounts,
+  getAccount,
+  updateProfile,
 };
