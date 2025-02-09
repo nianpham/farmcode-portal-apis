@@ -25,6 +25,13 @@ async function updateProfile(request, reply) {
   try {
     const { id } = request.params;
     const body = request.body
+    const sdt = body.phone
+    if(sdt){
+      const checkPhone = await iattService.account.getAccountByPhone({phone: sdt})
+      if(checkPhone && checkPhone._id.toString() !== id){
+        return reply.status(statusCode.badRequest).send({ message: failMessage.phoneExist });
+      }
+    }
     const data = await iattService.account.updateProfile(id, body)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {

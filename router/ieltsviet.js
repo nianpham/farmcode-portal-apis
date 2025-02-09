@@ -11,6 +11,11 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.put('/review/:id', ieltsvietController.review.updateReview);
     fastify.delete('/review/:id', ieltsvietController.review.deleteReview);
 
+    fastify.get('/blog/', ieltsvietController.blog.getAllBlogs);
+    fastify.get('/blog/:id', ieltsvietController.blog.getBlog);
+    fastify.post('/blog/', ieltsvietController.blog.createBlog);
+    fastify.put('/blog/:id', ieltsvietController.blog.updateBlog);
+    fastify.delete('/blog/:id', ieltsvietController.blog.deleteBlog);
     done();
 }
 

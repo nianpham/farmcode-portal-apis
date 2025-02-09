@@ -38,6 +38,13 @@ async function createOrder(request, reply) {
     // if (check === false) {
     //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
     // };
+    const sdt = account.phone
+    if(sdt){
+      const checkPhone = await iattService.account.getAccountByPhone({phone: sdt})
+      if(checkPhone && checkPhone._id.toString() !== account._id){
+        return reply.status(statusCode.badRequest).send({ message: failMessage.phoneExist });
+      }
+    }
     const data = await iattService.order.createOrder(account, order);
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });

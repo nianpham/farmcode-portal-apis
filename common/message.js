@@ -23,6 +23,7 @@ const failMessage = {
     'emptyData': 'Data is empty',
     'unvalidAccount': 'Email/Phone is not existed',
     'unvalidPassword': 'Password is not correct',
+    'phoneExist': 'Phone is existed',
 }
 
 module.exports = { statusCode, successMessage, failMessage }

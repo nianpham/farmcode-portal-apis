@@ -2,7 +2,9 @@ const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require("mongodb");
 
 async function getAllReviews() {
-  return ieltsvietModel.review.find({});
+  const reviews = await ieltsvietModel.review.find({});
+  return reviews
+    .filter(review => !review.deleted_at);
 }
 
 async function getReview(id) {
