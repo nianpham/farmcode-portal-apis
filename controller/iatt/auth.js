@@ -1,10 +1,27 @@
 const { statusCode, successMessage, failMessage } = require('~/common/message');
 const { iattService } = require("~/service");
 
-async function login(request, reply) {
+async function loginWithEmail(request, reply) {
   try {
     const data = request.body
-    const user = await iattService.account.getAccountByAccountLogin(data);
+    const user = await iattService.account.getAccountByEmail(data);
+    if (!user) {
+      reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
+    }
+    if (user.password !== data.password) {
+      reply.status(statusCode.badRequest).send({ message: failMessage.unvalidPassword });
+    }
+    return reply.status(statusCode.success).send({ data: user._id, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+
+async function loginWithPhone(request, reply) {
+  try {
+    const data = request.body
+    const user = await iattService.account.getAccountByPhone(data);
     if (!user) {
       reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
     }
@@ -54,6 +71,7 @@ async function loginWithGoogle(request, reply) {
 }
 
 module.exports = {
-  login,
+  loginWithEmail,
+  loginWithPhone,
   loginWithGoogle
 };

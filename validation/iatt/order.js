@@ -8,7 +8,7 @@ const CreateBlogSchema = Joi.object().keys({
     size: Joi.string().max(10).required(),
     address: Joi.string().max(100).required(),
     payment_method: Joi.string().valid('bank', 'credit').required(),  
-    status: Joi.string().valid('pending', 'delivering', 'completed').required(),
+    status: Joi.string().valid('pending', 'waiting',' delivering', 'completed').required(),
     total: Joi.number().positive().required(),
     date_completed: Joi.string().allow('').optional(),
 });

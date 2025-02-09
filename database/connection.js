@@ -17,6 +17,8 @@ let _iattProductCol = null;
 let _iattBlogCol = null;
 let _iattOrderCol = null;
 let _iattAccountCol = null;
+let _ieltsvietSliderCol = null;
+let _ieltsvietReviewCol = null;
 
 async function connection(cb) {
   if (db) {
@@ -34,6 +36,9 @@ async function connection(cb) {
     _iattBlogCol = db.collection('iatt_blogs');
     _iattOrderCol = db.collection('iatt_orders');
     _iattAccountCol = db.collection('iatt_accounts');
+    _ieltsvietSliderCol = db.collection('ieltsviet_sliders');
+    _ieltsvietReviewCol = db.collection('ieltsviet_reviews');
+
     await marketWarehouse.createIndex({
       created_at: 1,
       updated_at: 1,
@@ -52,6 +57,8 @@ const iattProductCol = () => _iattProductCol;
 const iattBlogCol = () => _iattBlogCol;
 const iattOrderCol = () => _iattOrderCol;
 const iattAccountCol = () => _iattAccountCol;
+const ieltsvietSliderCol = () => _ieltsvietSliderCol;
+const ieltsvietReviewCol = () => _ieltsvietReviewCol;
 
 module.exports = {
   connection,
@@ -60,4 +67,6 @@ module.exports = {
   iattBlogCol,
   iattOrderCol,
   iattAccountCol,
+  ieltsvietSliderCol,
+  ieltsvietReviewCol,
 };

@@ -17,11 +17,11 @@ async function createProduct(data) {
   return await ecokaModel.product.insertOne(data);
 }
 
-async function deleteProduct(_id) {
+async function deleteProduct(id) {
   const dataUpdate = {
     deleted_at: new Date(),
   };
-  return ecokaModel.product.updateOne({ _id: new ObjectId(_id) }, dataUpdate);
+  return ecokaModel.product.updateOne({ _id: new ObjectId(id) }, dataUpdate);
 }
 
 module.exports = {

@@ -1,25 +1,24 @@
 const database = require('~/database/connection');
 
 async function find(query) {
-  return database.iattOrderCol().find(query).toArray();
+  return database.ieltsvietReviewCol().find(query).toArray();
 }
 async function insertOne(data) {
-  return database.iattOrderCol().insertOne({
+  return database.ieltsvietReviewCol().insertOne({
     ...data,
-    status: 'waiting',
     created_at: new Date(),
   });
 }
 
 async function findOne(query) {
-  return database.iattOrderCol().findOne(query);
+  return database.ieltsvietReviewCol().findOne(query);
 }
 
 async function updateOne(query, data) {
-  return database.iattOrderCol().updateOne(query, { $set: data });
+  return database.ieltsvietReviewCol().updateOne(query, { $set: data });
 }
 
-async function findproductWithPagination(
+async function findReviewWithPagination(
   query,
   paginate,
   { projection = { password: 0 } } = {}
@@ -30,7 +29,7 @@ async function findproductWithPagination(
     parsedPageSize = 10,
   } = paginate;
   return await database
-    .iattOrderCol()
+    .ieltsvietReviewCol()
     .find(query, { projection })
     .sort(sort)
     .skip(skip)
@@ -39,7 +38,7 @@ async function findproductWithPagination(
 }
 
 async function countDocument(query) {
-  return await database.iattOrderCol().count(query);
+  return await database.ieltsvietReviewCol().count(query);
 }
 
 module.exports = {
@@ -47,6 +46,6 @@ module.exports = {
   insertOne,
   findOne,
   updateOne,
-  findproductWithPagination,
+  findReviewWithPagination,
   countDocument,
 };

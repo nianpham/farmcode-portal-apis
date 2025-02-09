@@ -1,25 +1,24 @@
 const database = require('~/database/connection');
 
 async function find(query) {
-  return database.iattOrderCol().find(query).toArray();
+  return database.ieltsvietSliderCol().find(query).toArray();
 }
 async function insertOne(data) {
-  return database.iattOrderCol().insertOne({
+  return database.ieltsvietSliderCol().insertOne({
     ...data,
-    status: 'waiting',
     created_at: new Date(),
   });
 }
 
 async function findOne(query) {
-  return database.iattOrderCol().findOne(query);
+  return database.ieltsvietSliderCol().findOne(query);
 }
 
 async function updateOne(query, data) {
-  return database.iattOrderCol().updateOne(query, { $set: data });
+  return database.ieltsvietSliderCol().updateOne(query, { $set: data });
 }
 
-async function findproductWithPagination(
+async function findSliderWithPagination(
   query,
   paginate,
   { projection = { password: 0 } } = {}
@@ -30,7 +29,7 @@ async function findproductWithPagination(
     parsedPageSize = 10,
   } = paginate;
   return await database
-    .iattOrderCol()
+    .ieltsvietSliderCol()
     .find(query, { projection })
     .sort(sort)
     .skip(skip)
@@ -39,7 +38,7 @@ async function findproductWithPagination(
 }
 
 async function countDocument(query) {
-  return await database.iattOrderCol().count(query);
+  return await database.ieltsvietSliderCol().count(query);
 }
 
 module.exports = {
@@ -47,6 +46,6 @@ module.exports = {
   insertOne,
   findOne,
   updateOne,
-  findproductWithPagination,
+  findSliderWithPagination,
   countDocument,
 };

@@ -21,7 +21,7 @@ const failMessage = {
     'internalError': 'Internal Server Error',
     'invalidData': 'Data is invalid',
     'emptyData': 'Data is empty',
-    'unvalidAccount': 'Email is not existed',
+    'unvalidAccount': 'Email/Phone is not existed',
     'unvalidPassword': 'Password is not correct',
 }
 

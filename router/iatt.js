@@ -2,7 +2,8 @@ const { iattController } = require('~/controller');
 const fastifyPassport = require('@fastify/passport');
 
 function iattRoute(fastify, options, done) {
-    fastify.post('/auth/login', iattController.auth.login);
+    fastify.post('/auth/login-email', iattController.auth.loginWithEmail);
+    fastify.post('/auth/login-phone', iattController.auth.loginWithPhone);
     fastify.get(
         '/auth/login/google',
         {
@@ -46,6 +47,7 @@ function iattRoute(fastify, options, done) {
     fastify.get('/order/get-all/:id', iattController.order.getAllOrdersById);
     fastify.get('/order/:id', iattController.order.getOrder);
     fastify.post('/order/', iattController.order.createOrder);
+    fastify.post('/order/no-login', iattController.order.createOrderWithoutLogin);
     fastify.put('/order/:id', iattController.order.updateOrder);
     fastify.delete('/order/:id', iattController.order.deleteOrder);
     

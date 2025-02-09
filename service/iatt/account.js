@@ -7,12 +7,12 @@ async function getAllAccounts() {
     .filter(account => !account.deleted_at);
 }
 
-async function getAccountByAccountLogin(data) {
-    return iattModel.account.findOne({ account_login: data.account_login });
-}
-
 async function getAccountByEmail(data) {
     return iattModel.account.findOne({ email: data.email });
+}
+
+async function getAccountByPhone(data) {
+    return iattModel.account.findOne({ phone: data.phone });
 }
 
 async function createAccount(data) {
@@ -33,5 +33,5 @@ module.exports = {
     createAccount,
     getAccount,
     updateProfile,
-    getAccountByAccountLogin
+    getAccountByPhone
 };

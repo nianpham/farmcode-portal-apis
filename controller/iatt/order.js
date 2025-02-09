@@ -33,12 +33,30 @@ async function getOrder(request, reply) {
 
 async function createOrder(request, reply) {
   try {
-    const Order = request.body;
+    const { account, order } = request.body;
     // const check = iattValidation.validate(Order, iattValidation.OrderSchema.CreateOrderSchema, reply);
     // if (check === false) {
     //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
     // };
-    const data = await iattService.order.createOrder(Order);
+    const data = await iattService.order.createOrder(account, order);
+    if (data === 'invalidEmail') {
+      return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
+    }
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+    console.log(err)
+  }
+}
+
+async function createOrderWithoutLogin(request, reply) {
+  try {
+    const { account, order } = request.body;
+    // const check = iattValidation.validate(Order, iattValidation.OrderSchema.CreateOrderSchema, reply);
+    // if (check === false) {
+    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    // };
+    const data = await iattService.order.createOrderWithoutLogin(account, order);
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
     }
@@ -80,5 +98,6 @@ module.exports = {
   createOrder,
   updateOrder,
   deleteOrder,
-  getAllOrdersById
+  getAllOrdersById,
+  createOrderWithoutLogin
 };

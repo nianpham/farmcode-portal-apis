@@ -1,5 +1,6 @@
 const { iattModel } = require('~/model');
 const { ObjectId } = require("mongodb");
+const crypto = require('crypto');
 
 async function getAllOrders() {
   const orders = await iattModel.order.find({});
@@ -21,54 +22,56 @@ async function updateOrder(id, data) {
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, data);
 }
 
-async function createOrder(data) {
-  const sdt = data.phone;
-  let user ;
-  let user_id;
-  if (data.account_email !== '') {
-    const email = data.account_email;
-    user = await iattModel.account.findOne({ email: email });
-    if(!user) {
-      return 'invalidEmail';
-    }
-    user_id = user._id;
+async function createOrder(account, order) {
+  const data_input = {
+    product_id: order.product_id,
+    account_id: account._id,
+    image: order.image,
+    color: order.color,
+    size: order.size,
+    address: order.address,
+    payment_method: order.payment_method,
+    total: order.total,
+    date_completed: '',
   }
-  else {
-    user = await iattModel.account.findOne({ phone: sdt });
+  return await iattModel.order.insertOne(data_input);
+}
+
+async function createOrderWithoutLogin(account, order) {
+    let user = await iattModel.account.findOne({ phone: account.phone });
+    let user_id = '';
     if (!user) {
       const dataAccount = {
         email: '',
-        account_login: sdt,
-        password: sdt,
-        name: '',
+        password: crypto.randomBytes(8).toString('hex'),
+        name: account.name,
         status: true,
-        phone: sdt,
+        phone: account.phone,
         role: 'personal',
-        avatar: '',
-        address: data.address,
-        ward: '',
-        district: 0,
-        province: 0,
-        districtName: '',
-        provinceName: '',
-        wardName: '',
+        avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT18iwsdCCbBfpa50-5BmNa_m_BX087_x1oWQ&s',
+        address: account.address,
+        ward: account.ward,
+        district: account.district,
+        province: account.province,
+        districtName: account.districtName,
+        provinceName: account.provinceName,
+        wardName: account.wardName,
       };
       user = await iattModel.account.insertOne(dataAccount);
       user_id = user.insertedId;
-    }
-    else {
-      user_id = user._id;
-    }
+  }
+  else {
+    user_id = user._id;
   }
   const data_input = {
-    product_id: data.product_id,
+    product_id: order.product_id,
     account_id: user_id,
-    image: data.image,
-    color: data.color,
-    size: data.size,
-    address: data.address,
-    payment_method: data.payment_method,
-    total: data.total,
+    image: order.image,
+    color: order.color,
+    size: order.size,
+    address: order.address,
+    payment_method: order.payment_method,
+    total: order.total,
     date_completed: '',
   }
   return await iattModel.order.insertOne(data_input);
@@ -88,4 +91,5 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getAllOrdersById,
+  createOrderWithoutLogin
 };
