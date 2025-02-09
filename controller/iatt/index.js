@@ -4,4 +4,5 @@ module.exports = {
   order: require('~/controller/iatt/order'),
   auth: require('~/controller/iatt/auth'),
   account: require('~/controller/iatt/account'),
+  payment: require('~/controller/iatt/payment'),
 };

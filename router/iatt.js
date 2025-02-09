@@ -50,6 +50,9 @@ function iattRoute(fastify, options, done) {
     fastify.post('/order/no-login', iattController.order.createOrderWithoutLogin);
     fastify.put('/order/:id', iattController.order.updateOrder);
     fastify.delete('/order/:id', iattController.order.deleteOrder);
+
+    // fastify.post('/payment/momo', iattController.payment.momo);
+    fastify.post('/payment/momo/callback', iattController.payment.callback);
     
     done();
 }
