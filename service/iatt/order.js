@@ -3,8 +3,9 @@ const payment = require('~/service/iatt/payment');
 const { ObjectId } = require("mongodb");
 const crypto = require('crypto');
 const axios = require('axios');
-const FormData = require('form-data');
-const { Readable } = require('stream');
+const fs = require('fs');
+const path = require('path');
+const CloudmersiveConvertApiClient = require('cloudmersive-convert-api-client');
 
 
 async function getAllOrders() {
@@ -29,57 +30,35 @@ async function updateOrder(id, data) {
 
 
 async function downloadImage(data) {
-  const imageSrc = data.Image_URL;
-  const localFile = await downloadImageFromURL(imageSrc);
-  const file = await transferImage(localFile);
-  return file;
-}
-
-async function downloadImageFromURL(imageSrc) {
   try {
-      const response = await axios.get(imageSrc, {
-          responseType: 'arraybuffer',
+    const imageSrc = data.Image_URL;
+    const defaultClient = CloudmersiveConvertApiClient.ApiClient.instance;
+    const Apikey = defaultClient.authentications['Apikey'];
+    Apikey.apiKey = process.env.CLOUDMERSIVE_API_KEY;
+    const apiInstance = new CloudmersiveConvertApiClient.ConvertImageApi();
+    const dpi = 300;
+    // Download the image
+    const response = await axios.get(imageSrc, {
+      responseType: 'arraybuffer',
+    });
+
+    const inputFile = Buffer.from(response.data);
+
+    // Convert image DPI
+    const convertedImage = await new Promise((resolve, reject) => {
+      apiInstance.convertImageImageSetDPI(dpi, inputFile, (error, data) => {
+        if (error) return reject(error);
+        resolve(data);
       });
-      return new Blob([response.data]);
+    });
+
+    // Save the converted image
+    fs.writeFileSync(outputFilePath, convertedImage);
+    console.log('✅ Converted image saved:', outputFilePath);
+
+    return outputFilePath;
   } catch (error) {
-      console.error('Error downloading image:', error.message);
-      throw new Error('Failed to download image');
-  }
-}
-
-async function transferImage(imageBlob) {
-  try {
-      if (!process.env.CLOUDMERSIVE_API_KEY) {
-          throw new Error('CLOUDMERSIVE_API_KEY is not set');
-      }
-
-      // Convert Blob to Buffer
-      const arrayBuffer = await imageBlob.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      // Convert Buffer to Readable Stream (Node.js compatible)
-      const stream = Readable.from(buffer);
-
-      // Prepare FormData
-      const form = new FormData();
-      form.append("inputFile", stream, { filename: "file.png" });
-
-      // Send request to Cloudmersive API
-      const response = await axios.post(
-          "https://api.cloudmersive.com/convert/image/set-dpi/300",
-          form,
-          {
-              headers: {
-                  ...form.getHeaders(),
-                  "Apikey": process.env.CLOUDMERSIVE_API_KEY,
-              },
-          }
-      );
-
-      return response.data;
-  } catch (err) {
-      console.error("File Read Error:", err);
-      throw new Error("File read failed");
+    console.error(error);
   }
 }
 

@@ -34,8 +34,11 @@ async function getOrder(request, reply) {
 async function downloadImage(request, reply) {
   try {
     const body = request.body;
-    const data = await iattService.order.downloadImage(body)
-    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+    const outputFilePath = await iattService.order.downloadImage(body);
+    reply.header('Content-Disposition', 'attachment; filename="converted_image.jpg"');
+    reply.header('Content-Type', 'image/jpeg');
+    
+    return reply.sendFile(outputFilePath).status(statusCode.success).send({  message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
     console.log(err)
@@ -61,10 +64,6 @@ async function createOrder(request, reply) {
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
     }
-
-
-    // call function momo payment
-    // lay payUrl
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
