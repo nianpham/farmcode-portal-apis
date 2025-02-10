@@ -1,7 +1,11 @@
 const { iattModel } = require('~/model');
+const payment = require('~/service/iatt/payment');
 const { ObjectId } = require("mongodb");
 const crypto = require('crypto');
 const axios = require('axios');
+const FormData = require('form-data');
+const { Readable } = require('stream');
+
 
 async function getAllOrders() {
   const orders = await iattModel.order.find({});
@@ -23,49 +27,59 @@ async function updateOrder(id, data) {
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, data);
 }
 
-async function downloadImage( data ) {
+
+async function downloadImage(data) {
   const imageSrc = data.Image_URL;
-  const file = await transferImage(imageSrc);
-  const formData = new FormData(); 
-  formData.append('file', file);
-  formData.append('fileName', file.name);
-  formData.append('toolId', 'Change the DPI of my Image');
-  formData.append('0', '300');
-  const response = await axios.post('https://convert.town/UploadFile', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return response.data ;
+  const localFile = await downloadImageFromURL(imageSrc);
+  const file = await transferImage(localFile);
+  return file;
 }
 
-async function transferImage(imageSrc) {
+async function downloadImageFromURL(imageSrc) {
   try {
-    // Parse the image URL to extract query parameters
-    const urlObj = new URL(imageSrc);
-    const queryParams = new URLSearchParams(urlObj.search);
-    const realImageUrl = queryParams.get('url') || imageSrc; // Extract real image URL
-
-    // Fetch the image
-    const response = await axios.get(realImageUrl, {
-      responseType: 'arraybuffer',
-      timeout: 10000, // 10 seconds timeout
-    });
-
-    const contentType = response.headers['content-type'] || 'application/octet-stream';
-    const realUrlObj = new URL(realImageUrl);
-    let fileName = realUrlObj.pathname.split('/').pop() || 'downloaded-image';
-
-    if (!fileName.includes('.')) {
-      // Guess extension if missing
-      const ext = contentType.split('/')[1] || 'jpg';
-      fileName += `.${ext}`;
-    }
-
-    return new File([new Blob([response.data], { type: contentType })], fileName, { type: contentType });
+      const response = await axios.get(imageSrc, {
+          responseType: 'arraybuffer',
+      });
+      return new Blob([response.data]);
   } catch (error) {
-    console.error('Error downloading image:', error);
-    throw error;
+      console.error('Error downloading image:', error.message);
+      throw new Error('Failed to download image');
+  }
+}
+
+async function transferImage(imageBlob) {
+  try {
+      if (!process.env.CLOUDMERSIVE_API_KEY) {
+          throw new Error('CLOUDMERSIVE_API_KEY is not set');
+      }
+
+      // Convert Blob to Buffer
+      const arrayBuffer = await imageBlob.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Convert Buffer to Readable Stream (Node.js compatible)
+      const stream = Readable.from(buffer);
+
+      // Prepare FormData
+      const form = new FormData();
+      form.append("inputFile", stream, { filename: "file.png" });
+
+      // Send request to Cloudmersive API
+      const response = await axios.post(
+          "https://api.cloudmersive.com/convert/image/set-dpi/300",
+          form,
+          {
+              headers: {
+                  ...form.getHeaders(),
+                  "Apikey": process.env.CLOUDMERSIVE_API_KEY,
+              },
+          }
+      );
+
+      return response.data;
+  } catch (err) {
+      console.error("File Read Error:", err);
+      throw new Error("File read failed");
   }
 }
 
@@ -83,7 +97,13 @@ async function createOrder(account, order) {
     total: order.total,
     date_completed: '',
   }
-  return await iattModel.order.insertOne(data_input);
+  const result = await iattModel.order.insertOne(data_input);
+  const payment_data = {
+    order_id: result.insertedId,
+    order_total: order.total,
+  }
+  const payUrl = await payment.momo(payment_data);
+  return payUrl;
 }
 
 async function createOrderWithoutLogin(account, order) {
@@ -124,7 +144,13 @@ async function createOrderWithoutLogin(account, order) {
     total: order.total,
     date_completed: '',
   }
-  return await iattModel.order.insertOne(data_input);
+  const result = await iattModel.order.insertOne(data_input);
+  const payment_data = {
+    order_id: result.insertedId,
+    order_total: order.total,
+  }
+  const payUrl = await payment.momo(payment_data);
+  return payUrl;
 }
 
 async function deleteOrder(id) {

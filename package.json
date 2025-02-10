@@ -29,6 +29,7 @@
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.12",
     "child_process": "^1.0.2",
+    "cloudmersive-convert-api-client": "^2.8.0",
     "compute-cosine-similarity": "^1.1.0",
     "compute-dot": "^1.1.0",
     "cors": "^2.8.5",
@@ -62,12 +63,14 @@
     "promptfoo": "^0.104.0",
     "redis": "^4.6.15",
     "socket.io": "^4.8.1",
+    "streamifier": "^0.1.1",
     "tesseract.js": "^5.1.1",
     "traverse": "^0.6.9",
     "util": "^0.12.5",
     "uuid": "^9.0.1",
     "winston": "^3.13.0",
-    "winston-daily-rotate-file": "^5.0.0"
+    "winston-daily-rotate-file": "^5.0.0",
+    "xhr2": "^0.2.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.2",

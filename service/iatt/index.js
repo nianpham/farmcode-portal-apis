@@ -3,4 +3,5 @@ module.exports = {
   blog: require('~/service/iatt/blog'),
   order: require('~/service/iatt/order'),
   account: require('~/service/iatt/account'), 
+  payment: require('~/service/iatt/payment'), 
 };

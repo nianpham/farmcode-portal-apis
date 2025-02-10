@@ -83,6 +83,7 @@ async function createOrderWithoutLogin(request, reply) {
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
     }
+    console.log(data)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
