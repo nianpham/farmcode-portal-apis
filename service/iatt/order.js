@@ -65,17 +65,36 @@ async function downloadImage(data) {
 async function createOrder(account, order) {
   const { _id, ...accountData } = account;
   await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, accountData);
-  const data_input = {
-    product_id: order.product_id,
-    account_id: new ObjectId(account._id),
-    image: order.image,
-    color: order.color,
-    size: order.size,
-    address: order.address,
-    payment_method: order.payment_method,
-    total: order.total,
-    date_completed: '',
+  let data_input = {};
+  if(order.payment_method === 'cash'){
+     data_input = {
+      product_id: order.product_id,
+      account_id: new ObjectId(account._id),
+      image: order.image,
+      color: order.color,
+      size: order.size,
+      address: order.address,
+      payment_method: order.payment_method,
+      total: order.total,
+      status: 'waiting',
+      date_completed: '',
+    }
   }
+  else {
+      data_input = {
+        product_id: order.product_id,
+        account_id: new ObjectId(account._id),
+        image: order.image,
+        color: order.color,
+        size: order.size,
+        address: order.address,
+        payment_method: order.payment_method,
+        total: order.total,
+        status: 'paid pending',
+        date_completed: '',
+      }
+  }
+  
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -112,17 +131,36 @@ async function createOrderWithoutLogin(account, order) {
     await iattModel.account.updateOne({ _id: new ObjectId(user._id) }, account);
     user_id = user._id;
   }
-  const data_input = {
-    product_id: order.product_id,
-    account_id: user_id,
-    image: order.image,
-    color: order.color,
-    size: order.size,
-    address: order.address,
-    payment_method: order.payment_method,
-    total: order.total,
-    date_completed: '',
+  let data_input = {};
+  if(order.payment_method === 'cash'){
+     data_input = {
+      product_id: order.product_id,
+      account_id: user_id,
+      image: order.image,
+      color: order.color,
+      size: order.size,
+      address: order.address,
+      payment_method: order.payment_method,
+      total: order.total,
+      status: 'waiting',
+      date_completed: '',
+    }
   }
+  else {
+     data_input = {
+      product_id: order.product_id,
+      account_id: user_id,
+      image: order.image,
+      color: order.color,
+      size: order.size,
+      address: order.address,
+      payment_method: order.payment_method,
+      total: order.total,
+      status: 'paid pending',
+      date_completed: '',
+    }
+  }
+  
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
