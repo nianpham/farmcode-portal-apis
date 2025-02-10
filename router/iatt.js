@@ -53,6 +53,8 @@ function iattRoute(fastify, options, done) {
 
     // fastify.post('/payment/momo', iattController.payment.momo);
     fastify.post('/payment/momo/callback', iattController.payment.callback);
+
+    fastify.post('/download/', iattController.order.downloadImage);
     
     done();
 }

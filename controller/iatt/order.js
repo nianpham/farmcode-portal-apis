@@ -31,6 +31,18 @@ async function getOrder(request, reply) {
   }
 }
 
+async function downloadImage(request, reply) {
+  try {
+    const body = request.body;
+    const data = await iattService.order.downloadImage(body)
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+    console.log(err)
+  }
+}
+
+
 async function createOrder(request, reply) {
   try {
     const { account, order } = request.body;
@@ -110,5 +122,6 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getAllOrdersById,
-  createOrderWithoutLogin
+  createOrderWithoutLogin,
+  downloadImage
 };

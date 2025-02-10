@@ -1,6 +1,7 @@
 const { iattModel } = require('~/model');
 const { ObjectId } = require("mongodb");
 const crypto = require('crypto');
+const axios = require('axios');
 
 async function getAllOrders() {
   const orders = await iattModel.order.find({});
@@ -22,9 +23,55 @@ async function updateOrder(id, data) {
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, data);
 }
 
+async function downloadImage( data ) {
+  const imageSrc = data.Image_URL;
+  const file = await transferImage(imageSrc);
+  const formData = new FormData(); 
+  formData.append('file', file);
+  formData.append('fileName', file.name);
+  formData.append('toolId', 'Change the DPI of my Image');
+  formData.append('0', '300');
+  const response = await axios.post('https://convert.town/UploadFile', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data ;
+}
+
+async function transferImage(imageSrc) {
+  try {
+    // Parse the image URL to extract query parameters
+    const urlObj = new URL(imageSrc);
+    const queryParams = new URLSearchParams(urlObj.search);
+    const realImageUrl = queryParams.get('url') || imageSrc; // Extract real image URL
+
+    // Fetch the image
+    const response = await axios.get(realImageUrl, {
+      responseType: 'arraybuffer',
+      timeout: 10000, // 10 seconds timeout
+    });
+
+    const contentType = response.headers['content-type'] || 'application/octet-stream';
+    const realUrlObj = new URL(realImageUrl);
+    let fileName = realUrlObj.pathname.split('/').pop() || 'downloaded-image';
+
+    if (!fileName.includes('.')) {
+      // Guess extension if missing
+      const ext = contentType.split('/')[1] || 'jpg';
+      fileName += `.${ext}`;
+    }
+
+    return new File([new Blob([response.data], { type: contentType })], fileName, { type: contentType });
+  } catch (error) {
+    console.error('Error downloading image:', error);
+    throw error;
+  }
+}
+
 async function createOrder(account, order) {
   const { _id, ...accountData } = account;
-  await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, accountData );
+  await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, accountData);
   const data_input = {
     product_id: order.product_id,
     account_id: new ObjectId(account._id),
@@ -94,5 +141,6 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getAllOrdersById,
-  createOrderWithoutLogin
+  createOrderWithoutLogin,
+  downloadImage,
 };

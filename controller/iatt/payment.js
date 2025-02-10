@@ -60,8 +60,8 @@ async function momo(request, reply) {
 
 async function callback(request, reply) {
   try {
-    console.log(request.body.orderId);
     // update order status
+    await iattService.order.updateOrder(request.body.orderId, { status: 'paid' });
     return reply.status(statusCode.success).send({ message: "Update Successfully" });
   } catch (err) {
     reply.status(statusCode.internalError).send({ message: failMessage.internalError });
