@@ -110,7 +110,7 @@ async function createOrderWithoutLogin(account, order) {
     user_id = user.insertedId;
   }
   else {
-    await iattModel.account.updateOne({ _id: user._id }, account);
+    await iattModel.account.updateOne({ _id: new ObjectId(user._id) }, account);
     user_id = user._id;
   }
   const data_input = {
