@@ -27,10 +27,7 @@ const UpdateOrderSchema = Joi.object().keys({
 const AccountOrderSChema = Joi.object().keys({
   _id: Joi.string().length(24),
   name: Joi.string().max(100).required(),
-  status: Joi.boolean().required(),
   phone: Joi.string().pattern(/^\d{10,15}$/).required(), 
-  role: Joi.string().valid('personal', 'business', 'admin').required(), 
-  avatar: Joi.string().uri().required(),
   address: Joi.string().max(250).required(),
   ward: Joi.string().max(10).required(),
   district: Joi.string().max(10).required(),
