@@ -23,6 +23,13 @@ async function getOrder(id) {
 }
 
 async function updateOrder(id, data) {
+  const order = await iattModel.order.findOne({ _id: new ObjectId(id) });
+  if (order.status === "completed") {
+    delete data.status;
+  }
+  if(data.status === 'completed'){
+    data.date_completed = new Date();
+  }
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, data);
 }
 
@@ -92,7 +99,8 @@ async function createOrder(account, order) {
         date_completed: '',
       }
   }
-  
+  const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
+  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -158,7 +166,8 @@ async function createOrderWithoutLogin(account, order) {
       date_completed: '',
     }
   }
-  
+  const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
+  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,

@@ -49,10 +49,11 @@ async function downloadImage(request, reply) {
 async function createOrder(request, reply) {
   try {
     const { account, order } = request.body;
-    // const check = iattValidation.validate(Order, iattValidation.OrderSchema.CreateOrderSchema, reply);
-    // if (check === false) {
-    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    // };
+    const check1 = iattValidation.validate(order, iattValidation.OrderSchema.CreateOrderSchema, reply);
+    const check2 = iattValidation.validate(account, iattValidation.OrderSchema.AccountOrderSChema, reply);
+    if (check1 === false || check2 === false) {
+      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    };
     const sdt = account.phone
     if(sdt){
       const checkPhone = await iattService.account.getAccountByPhone({phone: sdt})
@@ -60,6 +61,7 @@ async function createOrder(request, reply) {
         return reply.status(statusCode.badRequest).send({ message: failMessage.phoneExist });
       }
     }
+
     const data = await iattService.order.createOrder(account, order);
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
@@ -74,10 +76,11 @@ async function createOrder(request, reply) {
 async function createOrderWithoutLogin(request, reply) {
   try {
     const { account, order } = request.body;
-    // const check = iattValidation.validate(Order, iattValidation.OrderSchema.CreateOrderSchema, reply);
-    // if (check === false) {
-    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    // };
+    const check1 = iattValidation.validate(order, iattValidation.OrderSchema.CreateOrderSchema, reply);
+    const check2 = iattValidation.validate(account, iattValidation.OrderSchema.AccountOrderSChema, reply);
+    if (check1 === false || check2 === false) {
+      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    };
     const data = await iattService.order.createOrderWithoutLogin(account, order);
     if (data === 'invalidEmail') {
       return reply.status(statusCode.badRequest).send({ message: failMessage.unvalidAccount });
