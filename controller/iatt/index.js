@@ -5,4 +5,5 @@ module.exports = {
   auth: require('~/controller/iatt/auth'),
   account: require('~/controller/iatt/account'),
   payment: require('~/controller/iatt/payment'),
+  helper: require('~/controller/iatt/helper'),
 };

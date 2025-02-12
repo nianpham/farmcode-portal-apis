@@ -29,7 +29,6 @@
     "bluebird": "^3.7.2",
     "cheerio": "^1.0.0-rc.12",
     "child_process": "^1.0.2",
-    "cloudmersive-convert-api-client": "^2.8.0",
     "compute-cosine-similarity": "^1.1.0",
     "compute-dot": "^1.1.0",
     "cors": "^2.8.5",
