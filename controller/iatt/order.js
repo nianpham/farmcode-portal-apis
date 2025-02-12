@@ -36,11 +36,11 @@ async function getOrder(request, reply) {
 async function createOrder(request, reply) {
   try {
     const { account, order } = request.body;
-    const check1 = iattValidation.validate(order, iattValidation.OrderSchema.CreateOrderSchema, reply);
-    const check2 = iattValidation.validate(account, iattValidation.OrderSchema.AccountOrderSChema, reply);
-    if (check1 === false || check2 === false) {
-      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    };
+    // const check1 = iattValidation.validate(order, iattValidation.OrderSchema.CreateOrderSchema, reply);
+    // const check2 = iattValidation.validate(account, iattValidation.OrderSchema.AccountOrderSChema, reply);
+    // if (check1 === false || check2 === false) {
+    //   return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
+    // };
     const sdt = account.phone
     if(sdt){
       const checkPhone = await iattService.account.getAccountByPhone({phone: sdt})
