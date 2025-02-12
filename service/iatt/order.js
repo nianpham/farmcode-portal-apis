@@ -68,8 +68,8 @@ async function createOrder(account, order) {
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
-  const costumer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {order: Number(costumer.number_orders) + 1});
+  const costumer = await iattModel.account.findOne({ _id: new ObjectId(account._id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, {order: Number(costumer.number_orders) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
