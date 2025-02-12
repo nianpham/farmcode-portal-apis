@@ -31,19 +31,6 @@ async function getOrder(request, reply) {
   }
 }
 
-async function downloadImage(request, reply) {
-  try {
-    const body = request.body;
-    const outputFilePath = await iattService.order.downloadImage(body);
-    reply.header('Content-Disposition', 'attachment; filename="converted_image.jpg"');
-    reply.header('Content-Type', 'image/jpeg');
-    
-    return reply.sendFile(outputFilePath).status(statusCode.success).send({  message: successMessage.index });
-  } catch (err) {
-    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
-    console.log(err)
-  }
-}
 
 
 async function createOrder(request, reply) {
@@ -126,5 +113,4 @@ module.exports = {
   deleteOrder,
   getAllOrdersById,
   createOrderWithoutLogin,
-  downloadImage
 };

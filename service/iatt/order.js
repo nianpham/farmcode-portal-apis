@@ -4,7 +4,6 @@ const { ObjectId } = require("mongodb");
 const crypto = require('crypto');
 const axios = require('axios');
 const fs = require('fs');
-const path = require('path');
 
 async function getAllOrders() {
   const orders = await iattModel.order.find({});
@@ -34,38 +33,6 @@ async function updateOrder(id, data) {
 }
 
 
-async function downloadImage(data) {
-  try {
-    const imageSrc = data.Image_URL;
-    const defaultClient = CloudmersiveConvertApiClient.ApiClient.instance;
-    const Apikey = defaultClient.authentications['Apikey'];
-    Apikey.apiKey = process.env.CLOUDMERSIVE_API_KEY;
-    const apiInstance = new CloudmersiveConvertApiClient.ConvertImageApi();
-    const dpi = 300;
-    // Download the image
-    const response = await axios.get(imageSrc, {
-      responseType: 'arraybuffer',
-    });
-
-    const inputFile = Buffer.from(response.data);
-
-    // Convert image DPI
-    const convertedImage = await new Promise((resolve, reject) => {
-      apiInstance.convertImageImageSetDPI(dpi, inputFile, (error, data) => {
-        if (error) return reject(error);
-        resolve(data);
-      });
-    });
-
-    // Save the converted image
-    fs.writeFileSync(outputFilePath, convertedImage);
-    console.log('✅ Converted image saved:', outputFilePath);
-
-    return outputFilePath;
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 async function createOrder(account, order) {
   const { _id, ...accountData } = account;
@@ -101,6 +68,8 @@ async function createOrder(account, order) {
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
+  const costumer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {order: Number(costumer.number_orders) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -168,6 +137,8 @@ async function createOrderWithoutLogin(account, order) {
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
+  const costumer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {order: Number(costumer.number_orders) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -181,6 +152,9 @@ async function deleteOrder(id) {
   const dataUpdate = {
     deleted_at: new Date(),
   };
+  const order = await iattModel.order.findOne({ _id: new ObjectId(id) });
+  const costumer = await iattModel.account.findOne({ _id: new ObjectId(order.account_id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(order.account_id) }, {order: Number(costumer.number_orders) - 1});
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, dataUpdate);
 }
 
@@ -192,5 +166,4 @@ module.exports = {
   deleteOrder,
   getAllOrdersById,
   createOrderWithoutLogin,
-  downloadImage,
 };
