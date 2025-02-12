@@ -138,7 +138,7 @@ async function createOrderWithoutLogin(account, order) {
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
   const costumer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {order: Number(costumer.number_orders) + 1});
+  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {number_orders: Number(costumer.number_orders) + 1});
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -154,7 +154,7 @@ async function deleteOrder(id) {
   };
   const order = await iattModel.order.findOne({ _id: new ObjectId(id) });
   const costumer = await iattModel.account.findOne({ _id: new ObjectId(order.account_id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(order.account_id) }, {order: Number(costumer.number_orders) - 1});
+  await iattModel.account.updateOne({ _id: new ObjectId(order.account_id) }, {number_orders: Number(costumer.number_orders) - 1});
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, dataUpdate);
 }
 
