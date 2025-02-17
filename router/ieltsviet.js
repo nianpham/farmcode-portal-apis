@@ -16,6 +16,17 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.post('/blog/', ieltsvietController.blog.createBlog);
     fastify.put('/blog/:id', ieltsvietController.blog.updateBlog);
     fastify.delete('/blog/:id', ieltsvietController.blog.deleteBlog);
+
+    fastify.get('/account/', ieltsvietController.account.getAllAccounts);
+    fastify.get('/account/:id', ieltsvietController.account.getAccount);
+    fastify.post('/account/', ieltsvietController.account.createAccount);
+    fastify.put('/account/:id', ieltsvietController.account.updateAccount);
+    fastify.delete('/account/:id', ieltsvietController.account.deleteAccount);
+    fastify.post('/account/:id', ieltsvietController.account.login);
+    fastify.post('/account/check/:id', ieltsvietController.account.check);
+
+    fastify.get('/timekeeping/', ieltsvietController.timekeeping.getAllTimekeepings);
+    fastify.get('/timekeeping/:id', ieltsvietController.timekeeping.getTimekeeping);
     done();
 }
 

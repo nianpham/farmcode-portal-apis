@@ -7,6 +7,7 @@ const statusCode = {
     'forbidden': 403,
     'notFound': 404,
     'conflict': 409,
+    'userError': 405,
     'internalError': 500,
 }
 
@@ -21,9 +22,11 @@ const failMessage = {
     'internalError': 'Internal Server Error',
     'invalidData': 'Data is invalid',
     'emptyData': 'Data is empty',
+    'notFound': 'Account is not found',
     'unvalidAccount': 'Email/Phone is not existed',
     'unvalidPassword': 'Password is not correct',
     'phoneExist': 'Phone is existed',
+    'late': 'Account is late',
 }
 
 module.exports = { statusCode, successMessage, failMessage }
