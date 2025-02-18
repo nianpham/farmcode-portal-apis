@@ -29,7 +29,7 @@ async function login(request, reply) {
       return reply.status(statusCode.notFound).send({ message: failMessage.notFound });
     }
     if (data.status === 'late') {
-      return reply.status(statusCode.userError).send({ data: data, message: failMessage.late });
+      return reply.status(statusCode.success).send({ data: data.user, message: failMessage.late });
     }
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {

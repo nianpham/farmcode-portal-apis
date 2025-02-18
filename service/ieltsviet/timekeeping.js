@@ -8,7 +8,9 @@ async function getAllTimekeepings() {
 }
 
 async function getTimekeeping(id) {
-  return ieltsvietModel.timekeeping.findOne({ _id: new ObjectId(id) });
+  const timekeepings = ieltsvietModel.timekeeping.find({ account_id: new ObjectId(id) });
+  return timekeepings
+  .filter(timekeeping => !timekeeping.deleted_at);
 }
 
 async function createTimekeeping(id, data) {

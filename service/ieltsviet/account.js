@@ -5,11 +5,24 @@ const crypto = require('crypto');
 async function getAllAccounts() {
   const accounts = await ieltsvietModel.account.find({});
   return accounts
-    .filter(account => !account.deleted_at);
+    .filter(account => !account.deleted_at) 
+    .map(({ _id, teacher_name, avatar, latest_status }) => ({
+      _id,
+      teacher_name,
+      avatar,
+      latest_status
+    }));
 }
 
 async function getAccount(id) {
-  return ieltsvietModel.account.findOne({ _id: new ObjectId(id) });
+  const account = await ieltsvietModel.account.findOne({ _id: new ObjectId(id) });
+  const user = {
+    _id: account._id,
+    teacher_name: account.teacher_name,
+    avatar: account.avatar,
+    latest_status: account.latest_status,
+  }
+  return user;
 }
 
 async function updateAccount(id, data) {
@@ -46,7 +59,7 @@ async function login(id, data) {
       if(account.latest_status === 'checked-in') {
         const now = new Date();
         if(now.getDate() != account.latest_datetime_check_in.getDate()) {
-          await ieltsvietModel.account.updateOne({ _id: new ObjectId(id) }, {latest_status: 'checked-in', latest_datetime_check_in: now});
+          await ieltsvietModel.account.updateOne({ _id: new ObjectId(id) }, {latest_status: 'need-check-in', latest_datetime_check_in: now});
           const insert_data = {
             account_id: account._id,
             check_in: account.latest_datetime_check_in,
@@ -54,10 +67,22 @@ async function login(id, data) {
             status: 'late'
           }
           await ieltsvietModel.timekeeping.insertOne(insert_data);
-          return ({status: 'late'});
+          const user = {
+            _id: account._id,
+            teacher_name: account.teacher_name,
+            avatar: account.avatar,
+            latest_status: account.latest_status,
+          }
+          return ({user: user, status: 'late'});
         }
       }
-    return account;
+      const user = {
+        _id: account._id,
+        teacher_name: account.teacher_name,
+        avatar: account.avatar,
+        latest_status: account.latest_status,
+      }
+    return user;
   }
   return null;
 }
