@@ -10,6 +10,8 @@ async function getAllAccounts() {
       _id,
       teacher_name,
       avatar,
+      latest_datetime_check_in,
+      latest_datetime_check_out,
       latest_status
     }));
 }
@@ -20,6 +22,8 @@ async function getAccount(id) {
     _id: account._id,
     teacher_name: account.teacher_name,
     avatar: account.avatar,
+    latest_datetime_check_in: account.latest_datetime_check_in,
+    latest_datetime_check_out: account.latest_datetime_check_out,
     latest_status: account.latest_status,
   }
   return user;
@@ -40,11 +44,11 @@ async function check(id) {
       status: 'done'
     }
     await ieltsvietModel.timekeeping.insertOne(insert_data);
-    return ({status: 'done-check-out'});
+    return ({time: new Date(), status: 'done-check-out'});
   }
   else if(account.latest_status === 'need-check-in'){
       await ieltsvietModel.account.updateOne({ _id: new ObjectId(id) }, {latest_status: 'checked-in', latest_datetime_check_in: new Date()});
-      return ({status: 'done-check-in'});
+      return ({time: new Date(), status: 'done-check-in'});
   }
   return ;
 }
@@ -71,6 +75,8 @@ async function login(id, data) {
             _id: account._id,
             teacher_name: account.teacher_name,
             avatar: account.avatar,
+            latest_datetime_check_in: account.latest_datetime_check_in,
+            latest_datetime_check_out: now,
             latest_status: account.latest_status,
           }
           return ({user: user, status: 'late'});
@@ -80,6 +86,8 @@ async function login(id, data) {
         _id: account._id,
         teacher_name: account.teacher_name,
         avatar: account.avatar,
+        latest_datetime_check_in: account.latest_datetime_check_in,
+        latest_datetime_check_out: account.latest_datetime_check_out,
         latest_status: account.latest_status,
       }
     return user;
