@@ -24,10 +24,7 @@ async function getBlog(request, reply) {
 async function createBlog(request, reply) {
   try {
     const blog = request.body;
-    const check = iattValidation.validate(blog, iattValidation.BlogSchema.CreateBlogSchema, reply);
-    if (check === false) {
-      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    };
+   await iattValidation.validate(blog, iattValidation.BlogSchema.CreateBlogSchema, reply);
     const data = await iattService.blog.createBlog(blog);
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
@@ -39,7 +36,7 @@ async function updateBlog(request, reply) {
   try {
     const { id } = request.params;
     const blog = request.body;
-    const check = iattValidation.validate(blog, iattValidation.BlogSchema.UpdateBlogSchema, reply);
+    await iattValidation.validate(blog, iattValidation.BlogSchema.UpdateBlogSchema, reply);
     if (check === false) {
       return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
     };

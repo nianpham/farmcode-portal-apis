@@ -23,10 +23,7 @@ async function getProduct(request, reply) {
 async function createProduct(request, reply) {
   try {
     const product = request.body;
-    const check = iattValidation.validate(product, iattValidation.ProductSchema.CreateProductSchema, reply);
-    if (check === false) {
-      return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
-    };
+    const check = await iattValidation.validate(product, iattValidation.ProductSchema.CreateProductSchema, reply);
     const data = await iattService.product.createProduct(product)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
@@ -38,7 +35,7 @@ async function updateProduct(request, reply) {
   try {
     const { id } = request.params;
     const product = request.body;
-    const check = iattValidation.validate(product, iattValidation.ProductSchema.UpdateProductSchema, reply);
+    const check = await iattValidation.validate(product, iattValidation.ProductSchema.UpdateProductSchema, reply);
     if (check === false) {
       return reply.status(statusCode.badRequest).send({ message: failMessage.invalidData });
     };
