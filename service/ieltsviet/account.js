@@ -6,7 +6,7 @@ async function getAllAccounts() {
   const accounts = await ieltsvietModel.account.find({});
   return accounts
     .filter(account => !account.deleted_at) 
-    .map(({ _id, teacher_name, avatar, latest_status }) => ({
+    .map(({ _id, teacher_name, avatar, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
       _id,
       teacher_name,
       avatar,
@@ -99,7 +99,7 @@ async function createAccount(data) {
   const data_insert = {
     ...data,
     avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-    login_code: crypto.randomBytes(8).toString('hex'),
+    login_code: crypto.randomBytes(4).toString('hex'),
     latest_datetime_check_in: new Date(),
     latest_datetime_check_out: new Date(),
     latest_status: 'need-check-in',
