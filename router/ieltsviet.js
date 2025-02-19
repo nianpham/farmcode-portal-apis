@@ -25,6 +25,8 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.post('/account/:id', ieltsvietController.account.login);
     fastify.post('/account/check/:id', ieltsvietController.account.check);
 
+    fastify.get('/author/:id', ieltsvietController.author.getAuthor);
+
     fastify.get('/timekeeping/', ieltsvietController.timekeeping.getAllTimekeepings);
     fastify.get('/timekeeping/:id', ieltsvietController.timekeeping.getTimekeeping);
     done();

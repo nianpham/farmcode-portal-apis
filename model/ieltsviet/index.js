@@ -4,4 +4,5 @@ module.exports = {
   blog: require('~/model/ieltsviet/blog'),
   account: require('~/model/ieltsviet/account'),
   timekeeping: require('~/model/ieltsviet/timekeeping'),
+  author: require('~/model/ieltsviet/author')
 };
