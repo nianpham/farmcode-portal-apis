@@ -6,10 +6,11 @@ async function getAllAccounts() {
   const accounts = await ieltsvietModel.account.find({});
   return accounts
     .filter(account => !account.deleted_at) 
-    .map(({ _id, teacher_name, avatar, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
+    .map(({ _id, teacher_name, teacher_avatar, role, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
       _id,
       teacher_name,
-      avatar,
+      teacher_avatar,
+      role,
       latest_datetime_check_in,
       latest_datetime_check_out,
       latest_status
@@ -21,7 +22,8 @@ async function getAccount(id) {
   const user = {
     _id: account._id,
     teacher_name: account.teacher_name,
-    avatar: account.avatar,
+    teacher_avatar: account.teacher_avatar,
+    role: account.role,
     latest_datetime_check_in: account.latest_datetime_check_in,
     latest_datetime_check_out: account.latest_datetime_check_out,
     latest_status: account.latest_status,
@@ -74,7 +76,8 @@ async function login(id, data) {
           const user = {
             _id: account._id,
             teacher_name: account.teacher_name,
-            avatar: account.avatar,
+            teacher_avatar: account.teacher_avatar,
+            role: account.role,
             latest_datetime_check_in: account.latest_datetime_check_in,
             latest_datetime_check_out: now,
             latest_status: account.latest_status,
@@ -85,7 +88,8 @@ async function login(id, data) {
       const user = {
         _id: account._id,
         teacher_name: account.teacher_name,
-        avatar: account.avatar,
+        teacher_avatar: account.teacher_avatar,
+        role: account.role,
         latest_datetime_check_in: account.latest_datetime_check_in,
         latest_datetime_check_out: account.latest_datetime_check_out,
         latest_status: account.latest_status,
@@ -96,10 +100,14 @@ async function login(id, data) {
 }
 
 async function createAccount(data) {
+  const code = Math.floor(1000 + Math.random() * 9000).toString();
+  while (await ieltsvietModel.account.findOne
+    ({ login_code: code })) {
+    code = Math.floor(1000 + Math.random() * 9000).toString();
+  }
   const data_insert = {
     ...data,
-    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-    login_code: crypto.randomBytes(4).toString('hex'),
+    login_code: code,
     latest_datetime_check_in: new Date(),
     latest_datetime_check_out: new Date(),
     latest_status: 'need-check-in',
