@@ -37,6 +37,7 @@ async function updateOrder(id, data) {
 async function createOrder(account, order) {
   const { _id, ...accountData } = account;
   await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, accountData);
+  const ans = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   let data_input = {};
   if(order.payment_method === 'cash'){
      data_input = {
@@ -50,6 +51,8 @@ async function createOrder(account, order) {
       total: order.total,
       status: 'waiting',
       date_completed: '',
+      product_name: ans.name,
+      product_price: ans.category,
     }
   }
   else {
@@ -64,6 +67,8 @@ async function createOrder(account, order) {
         total: order.total,
         status: 'paid pending',
         date_completed: '',
+        product_name: ans.name,
+        product_price: ans.category,
       }
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
@@ -81,6 +86,7 @@ async function createOrder(account, order) {
 
 async function createOrderWithoutLogin(account, order) {
   let user = await iattModel.account.findOne({ phone: account.phone });
+  const ans = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   let user_id = '';
   if (!user) {
     const dataAccount = {
@@ -119,6 +125,8 @@ async function createOrderWithoutLogin(account, order) {
       total: order.total,
       status: 'waiting',
       date_completed: '',
+      product_name: ans.name,
+      product_price: ans.category,
     }
   }
   else {
@@ -133,6 +141,8 @@ async function createOrderWithoutLogin(account, order) {
       total: order.total,
       status: 'paid pending',
       date_completed: '',
+      product_name: ans.name,
+      product_price: ans.category,
     }
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
