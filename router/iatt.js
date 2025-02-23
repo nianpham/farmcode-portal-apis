@@ -57,6 +57,7 @@ function iattRoute(fastify, options, done) {
     fastify.post('/helper/upscale-ppi', iattController.helper.upscalePPI);
     fastify.post('/helper/background-remove', iattController.helper.backgroundRemove);
     fastify.post('/helper/enhance', iattController.helper.enhance);
+    fastify.post('/helper/image-ai', iattController.helper.imageAi);
 
     done();
 }
