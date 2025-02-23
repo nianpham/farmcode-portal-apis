@@ -55,7 +55,9 @@ function iattRoute(fastify, options, done) {
     fastify.post('/payment/momo/callback', iattController.payment.callback);
 
     fastify.post('/helper/upscale-ppi', iattController.helper.upscalePPI);
-    
+    fastify.post('/helper/background-remove', iattController.helper.backgroundRemove);
+    fastify.post('/helper/enhance', iattController.helper.enhance);
+
     done();
 }
 

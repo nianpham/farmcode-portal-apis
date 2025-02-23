@@ -1,4 +1,5 @@
 const { statusCode, successMessage, failMessage } = require('~/common/message');
+require('dotenv').config();
 
 async function upscalePPI(request, reply) {
   try {
@@ -48,6 +49,138 @@ async function upscalePPI(request, reply) {
   }
 }
 
+
+async function backgroundRemove(request, reply) {
+  try {
+    const  { imageUrl }  = request.body;
+    const formData = new FormData();
+    formData.append('sync', '0');
+    formData.append('image_url', imageUrl);
+    const response = await fetch('https://techhk.aoscdn.com/api/tasks/visual/segmentation', {
+      method: 'POST',
+      headers: {
+        'X-API-KEY': process.env.PICWISH_API_KEY, // Only include API key in headers
+      },
+      body: formData, // Let fetch handle FormData headers
+    });
+
+    const jsonData = await response.json();
+    // console.log("API Response Data:", jsonData);
+    const taskId = jsonData.data.task_id;
+    let resultData;
+    while (true) {
+      const resultResponse = await fetch(`https://techhk.aoscdn.com/api/tasks/visual/segmentation/${taskId}`, {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': process.env.PICWISH_API_KEY,
+        },
+      });
+
+      resultData = await resultResponse.json();
+
+      if (resultData.data && resultData.data.state === 1) {
+        // Process completed successfully
+        break;
+      } else if (resultData.data && resultData.data.state_detail === "Failed") {
+        // API returned a failure state
+        throw new Error("Image processing failed.");
+      }
+      
+      // Wait before polling again (e.g., 1 second)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    const imageDownloadUrl = resultData.data.image; 
+
+    const imageResponse = await fetch(imageDownloadUrl);
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+
+    const imageBlob = new Blob([imageBuffer], { type: 'image/png' });
+
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append('file', imageBlob, { filename: 'image.png' });
+    cloudinaryFormData.append('upload_preset', 'portal');
+    cloudinaryFormData.append('folder', 'iatt');
+    
+    const cloudinaryResponse = await fetch('https://api.cloudinary.com/v1_1/farmcode/image/upload', {
+      method: 'POST',
+      body: cloudinaryFormData,
+    });
+
+    const cloudinaryData = await cloudinaryResponse.json();
+    reply.status(statusCode.success).send({ data: cloudinaryData.secure_url, message: successMessage.index });
+  } catch (err) {
+    console.log(err);
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+async function enhance(request, reply) {
+  try {
+    const  { imageUrl }  = request.body;
+    const formData = new FormData();
+    formData.append('sync', '0');
+    formData.append('image_url', imageUrl);
+    const response = await fetch('https://techhk.aoscdn.com/api/tasks/visual/scale', {
+      method: 'POST',
+      headers: {
+        'X-API-KEY': process.env.PICWISH_API_KEY, // Only include API key in headers
+      },
+      body: formData, // Let fetch handle FormData headers
+    });
+
+    const jsonData = await response.json();
+    const taskId = jsonData.data.task_id;
+    let resultData;
+    while (true) {
+      const resultResponse = await fetch(`https://techhk.aoscdn.com/api/tasks/visual/scale/${taskId}`, {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': process.env.PICWISH_API_KEY,
+        },
+      });
+
+      resultData = await resultResponse.json();
+
+      if (resultData.data && resultData.data.state === 1) {
+        // Process completed successfully
+        break;
+      } else if (resultData.data && resultData.data.state_detail === "Failed") {
+        // API returned a failure state
+        throw new Error("Image processing failed.");
+      }
+      
+      // Wait before polling again (e.g., 1 second)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    const imageDownloadUrl = resultData.data.image; 
+
+    const imageResponse = await fetch(imageDownloadUrl);
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+
+    const imageBlob = new Blob([imageBuffer], { type: 'image/png' });
+
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append('file', imageBlob, { filename: 'image.png' });
+    cloudinaryFormData.append('upload_preset', 'portal');
+    cloudinaryFormData.append('folder', 'iatt');
+    
+    const cloudinaryResponse = await fetch('https://api.cloudinary.com/v1_1/farmcode/image/upload', {
+      method: 'POST',
+      body: cloudinaryFormData,
+    });
+
+    const cloudinaryData = await cloudinaryResponse.json();
+    reply.status(statusCode.success).send({ data: cloudinaryData.secure_url, message: successMessage.index });
+  } catch (err) {
+    console.log(err);
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+
 module.exports = {
   upscalePPI,
+  backgroundRemove,
+  enhance,
 };
