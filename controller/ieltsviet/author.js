@@ -20,8 +20,6 @@ async function getAuthor(request, reply) {
   }
 }
 
-
-
 module.exports = {
     getAllAuthors,
     getAuthor
