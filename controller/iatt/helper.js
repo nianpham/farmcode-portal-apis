@@ -49,6 +49,48 @@ async function upscalePPI(request, reply) {
   }
 }
 
+async function smoothSkin(request, reply) {
+  try {
+    const body = request.body;
+    const imageUrl = body.image_url;
+    const format = body.format;
+    const formData = new FormData();
+    formData.append('image_url', imageUrl);
+    formData.append('format', format);
+    const response = await fetch('https://api.picsart.io/tools/1.0/enhance/face', {
+      method: 'POST',
+      headers: {
+        'x-picsart-api-key': process.env.PICSART_API_KEY,
+        'accept': 'application/json' 
+      },
+      body: formData, 
+    });
+    const resultData = await response.json();
+    const imageDownloadUrl = resultData.data.url;
+
+    const imageResponse = await fetch(imageDownloadUrl);
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+
+    const imageBlob = new Blob([imageBuffer], { type: 'image/png' });
+
+    const cloudinaryFormData = new FormData();
+    cloudinaryFormData.append('file', imageBlob, { filename: 'image.png' });
+    cloudinaryFormData.append('upload_preset', 'portal');
+    cloudinaryFormData.append('folder', 'iatt');
+
+    const cloudinaryResponse = await fetch('https://api.cloudinary.com/v1_1/farmcode/image/upload', {
+      method: 'POST',
+      body: cloudinaryFormData,
+    });
+
+    const cloudinaryData = await cloudinaryResponse.json();
+    reply.status(statusCode.success).send({ data: cloudinaryData.secure_url, message: successMessage.index });
+  } catch (err) {
+    console.log(err);
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
 async function imageAi(request, reply) {
   try {
     const body = request.body;
@@ -228,4 +270,5 @@ module.exports = {
   backgroundRemove,
   enhance,
   imageAi,
+  smoothSkin,
 };
