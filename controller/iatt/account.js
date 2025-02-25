@@ -39,8 +39,23 @@ async function updateProfile(request, reply) {
   }
 }
 
+async function changePassword(request, reply) {
+  try {
+    const { id } = request.params;
+    const body = request.body
+    const data = await iattService.account.changePassword(id, body)
+    if(data.message){
+      return reply.status(statusCode.badRequest).send({ message: data.message });
+    }
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
 module.exports = {
   getAllAccounts,
   getAccount,
   updateProfile,
+  changePassword
 };

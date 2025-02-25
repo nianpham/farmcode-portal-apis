@@ -25,7 +25,20 @@ async function getAccount(id) {
 
 async function updateProfile(id, data) {
     return iattModel.account.updateOne({ _id: new ObjectId(id) }, data);
-  }
+}
+
+async function changePassword(id, data) {
+    const oldPassword = data.oldPassword;
+    const newPassword = data.newPassword;
+    const account = await iattModel.account.findOne({ _id: new ObjectId(id) });
+    if (!account) {
+        return { message: 'Tài khoản không tồn tại' };
+    }
+    if (account.password !== oldPassword) {
+        return { message: 'Mật khẩu cũ không đúng' };
+    }
+    return iattModel.account.updateOne({ _id: new ObjectId(id) }, { password: newPassword });
+}
 
 module.exports = {
     getAllAccounts,
@@ -33,5 +46,6 @@ module.exports = {
     createAccount,
     getAccount,
     updateProfile,
-    getAccountByPhone
+    getAccountByPhone,
+    changePassword
 };
