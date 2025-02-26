@@ -8,6 +8,10 @@ const axios = require('axios');
 
 async function start(request, reply) {
   try {
+    return reply.status(statusCode.success).send({
+      success: true,
+      data: null
+    });
     const targetDir = path.join(process.cwd(), 'controller', 'lomono');
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true });

@@ -7,7 +7,7 @@ async function routes(fastify) {
   fastify.register(ecokaRoute, { prefix: '/ecoka' });
   fastify.register(iattRoute, { prefix: '/inanhtructuyen' });
   fastify.register(ieltsvietRoute, { prefix: '/ielts-viet' });
-  fastify.register(lomonoRoute, { prefix: '/lomono' });
+  fastify.register(lomonoRoute, { prefix: '/bot-bridge' });
 }
 
 module.exports = routes;
