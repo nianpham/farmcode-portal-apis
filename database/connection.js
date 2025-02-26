@@ -12,6 +12,7 @@ const connectOptions = {
 let marketWarehouse = null;
 let client = null;
 let db = null;
+let _helperAddressCol = null;
 let _ecokaProductCol = null;
 let _iattProductCol = null;
 let _iattBlogCol = null;
@@ -47,6 +48,7 @@ async function connection(cb) {
     _ieltsvietAccountCol = db.collection('ieltsviet_accounts');
     _ieltsvietTimekeepingCol = db.collection('ieltsviet_timekeepings');
     _ieltsvietAuthorCol = db.collection('ieltsviet_authors');
+    _helperAddressCol = db.collection('helper_address');
 
     await marketWarehouse.createIndex({
       created_at: 1,
@@ -72,6 +74,7 @@ const ieltsvietBlogCol = () => _ieltsvietBlogCol;
 const ieltsvietAccountCol = () => _ieltsvietAccountCol;
 const ieltsvietTimekeepingCol = () => _ieltsvietTimekeepingCol;
 const ieltsvietAuthorCol = () => _ieltsvietAuthorCol;
+const helperAddressCol = () => _helperAddressCol;
 
 module.exports = {
   connection,
@@ -86,4 +89,5 @@ module.exports = {
   ieltsvietAccountCol,
   ieltsvietTimekeepingCol,
   ieltsvietAuthorCol,
+  helperAddressCol,
 };
