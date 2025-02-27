@@ -25,7 +25,6 @@ let _ieltsvietAccountCol = null;
 let _ieltsvietTimekeepingCol = null;
 let _ieltsvietAuthorCol = null;
 
-
 async function connection(cb) {
   if (db) {
     console.log('>>>>>> Reusing existing DB connection <<<<<<');
