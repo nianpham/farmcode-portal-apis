@@ -7,11 +7,12 @@ async function getAllAccounts() {
   const accounts = await ieltsvietModel.account.find({});
   return accounts
     .filter(account => !account.deleted_at) 
-    .map(({ _id, teacher_name, teacher_avatar, role, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
+    .map(({ _id, teacher_name, teacher_avatar, role, login_code, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
       _id,
       teacher_name,
       teacher_avatar,
       role,
+      login_code,
       latest_datetime_check_in,
       latest_datetime_check_out,
       latest_status
@@ -116,6 +117,7 @@ async function getAccount(id) {
     teacher_name: account.teacher_name,
     teacher_avatar: account.teacher_avatar,
     role: account.role,
+    login_code: account.login_code,
     latest_datetime_check_in: account.latest_datetime_check_in,
     latest_datetime_check_out: account.latest_datetime_check_out,
     latest_status: account.latest_status,
