@@ -24,6 +24,8 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.delete('/account/:id', ieltsvietController.account.deleteAccount);
     fastify.post('/account/:id', ieltsvietController.account.login);
     fastify.post('/account/check/:id', ieltsvietController.account.check);
+    fastify.get('/account/search-day', ieltsvietController.account.searchInDay);
+    fastify.get('/account/search-month/:month', ieltsvietController.account.searchInMonth);
 
     fastify.get('/author', ieltsvietController.author.getAllAuthors);
     fastify.get('/author/:id', ieltsvietController.author.getAuthor);

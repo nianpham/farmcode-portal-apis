@@ -1,8 +1,100 @@
 const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require("mongodb");
 const crypto = require('crypto');
+const { account } = require('.');
 
 async function getAllAccounts() {
+  const accounts = await ieltsvietModel.account.find({});
+  return accounts
+    .filter(account => !account.deleted_at) 
+    .map(({ _id, teacher_name, teacher_avatar, role, latest_datetime_check_in, latest_datetime_check_out, latest_status }) => ({
+      _id,
+      teacher_name,
+      teacher_avatar,
+      role,
+      latest_datetime_check_in,
+      latest_datetime_check_out,
+      latest_status
+    }));
+}
+
+async function searchInDay() {
+  const data = await ieltsvietModel.account.find({}) ;
+  const accounts = data.filter(account => !account.deleted_at)
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
+  const timekeeping = await ieltsvietModel.timekeeping.find({
+    account_id: { $in: accounts.map(acc => acc._id) }, 
+    check_in: { $gte: startOfDay, $lt: endOfDay }
+  })
+  const result = []
+  accounts.forEach(account => {
+    const check = timekeeping.filter(time => time.account_id.toString() === account._id.toString());
+    result.push({
+      _id: account._id,
+      teacher_name: account.teacher_name,
+      teacher_avatar: account.teacher_avatar,
+      role: account.role,
+      latest_datetime_check_in: account.latest_datetime_check_in,
+      latest_datetime_check_out: account.latest_datetime_check_out,
+      timekeeping: check.length > 0 ? check : []  
+    });
+  });
+  return result
+}
+
+async function searchInMonth(month) {
+  const data = await ieltsvietModel.account.find({}) ;
+  const accounts = data.filter(account => !account.deleted_at)
+  const today = new Date();
+  const startOfMonth = new Date(today.getFullYear(), month - 1, 1, 0, 0, 0, 0);
+  const endOfMonth = new Date(today.getFullYear(),  month , 0, 23, 59, 59, 999);
+
+  const timekeeping = await ieltsvietModel.timekeeping.find({
+    account_id: { $in: accounts.map(acc => acc._id) },
+    check_in: { $gte: startOfMonth, $lt: endOfMonth }
+  });
+  const result = []
+  accounts.forEach(account => {
+    const check = timekeeping.filter(time => time.account_id.toString() === account._id.toString());
+    total_shift = 0;
+    enough_shift = 0;
+    error_shift = 0;
+    for (let i = 0; i < check.length; i++) {
+      total_shift++;
+      if(check[i].status === 'done') {
+        const diffInHours = (check[i].check_out.getTime() - check[i].check_in.getTime()) / (1000 * 60 * 60);
+        if (diffInHours >= 1.5) {
+          enough_shift++;
+        }
+        else {
+          error_shift++;
+        }
+      }
+      else {
+        error_shift++;
+      }
+    }
+    result.push({
+      _id: account._id,
+      teacher_name: account.teacher_name,
+      teacher_avatar: account.teacher_avatar,
+      role: account.role,
+      latest_datetime_check_in: account.latest_datetime_check_in,
+      latest_datetime_check_out: account.latest_datetime_check_out,
+      timekeeping: {
+        total_shift: total_shift,
+        enough_shift: enough_shift,
+        error_shift: error_shift
+      } 
+    });
+  });
+
+  return result
+}
+
+async function getAllAccountsWithStatus() {
   const accounts = await ieltsvietModel.account.find({});
   return accounts
     .filter(account => !account.deleted_at) 
@@ -129,5 +221,8 @@ module.exports = {
   updateAccount,
   deleteAccount,
   login,
-  check
+  check,
+  getAllAccountsWithStatus,
+  searchInDay,
+  searchInMonth
 };

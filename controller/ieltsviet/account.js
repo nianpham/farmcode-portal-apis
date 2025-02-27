@@ -10,6 +10,36 @@ async function getAllAccounts(request, reply) {
   }
 }
 
+async function getAllAccountsWithStatus(request, reply) {
+  try {
+    const data = await ieltsvietService.account.getAllAccountsWithStatus();
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+async function searchInMonth(request, reply) {
+  try {
+    const { month } = request.params;
+    const data = await ieltsvietService.account.searchInMonth(month);
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+async function searchInDay(request, reply) {
+  try {
+    const data = await ieltsvietService.account.searchInDay();
+    return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
+  } catch (err) {
+    console.log(err);
+    reply.status(statusCode.internalError).send({ message: failMessage.internalError });
+  }
+}
+
+
 async function getAccount(request, reply) {
   try {
     const { id } = request.params;
@@ -85,5 +115,8 @@ module.exports = {
     deleteAccount,
     updateAccount,
     login,
-    check
+    check,
+    getAllAccountsWithStatus,
+    searchInMonth,
+    searchInDay
 };
