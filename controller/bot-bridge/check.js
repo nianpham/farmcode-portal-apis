@@ -102,6 +102,7 @@ Authorization: Bearer ${BOT_BRIDGE_TOKEN}
 
 async function handler(request, reply) {
   try {
+    console.log('>>>>>> Request Body <<<<<<<<', request.body);
     const data = await connection(request?.body?.unique);
     const targetDir = path.join(process.cwd(), 'controller', 'bot-bridge');
     if (!fs.existsSync(targetDir)) {
