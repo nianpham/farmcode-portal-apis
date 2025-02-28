@@ -26,7 +26,7 @@ async function updateOrder(id, data) {
   if (order.status === "completed") {
     delete data.status;
   }
-  if(data.status === 'completed'){
+  if (data.status === 'completed') {
     data.date_completed = new Date();
   }
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, data);
@@ -39,8 +39,8 @@ async function createOrder(account, order) {
   await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, accountData);
   const ans = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   let data_input = {};
-  if(order.payment_method === 'cash'){
-     data_input = {
+  if (order.payment_method === 'cash') {
+    data_input = {
       product_id: order.product_id,
       account_id: new ObjectId(account._id),
       image: order.image,
@@ -56,25 +56,25 @@ async function createOrder(account, order) {
     }
   }
   else {
-      data_input = {
-        product_id: order.product_id,
-        account_id: new ObjectId(account._id),
-        image: order.image,
-        color: order.color,
-        size: order.size,
-        address: order.address,
-        payment_method: order.payment_method,
-        total: order.total,
-        status: 'paid pending',
-        date_completed: '',
-        product_name: ans.name,
-        product_price: ans.category,
-      }
+    data_input = {
+      product_id: order.product_id,
+      account_id: new ObjectId(account._id),
+      image: order.image,
+      color: order.color,
+      size: order.size,
+      address: order.address,
+      payment_method: order.payment_method,
+      total: order.total,
+      status: 'paid pending',
+      date_completed: '',
+      product_name: ans.name,
+      product_price: ans.category,
+    }
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
-  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
-  const costumer = await iattModel.account.findOne({ _id: new ObjectId(account._id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, {number_orders: Number(costumer.number_orders) + 1});
+  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, { sold: Number(product.sold) + 1 });
+  const customer = await iattModel.account.findOne({ _id: new ObjectId(account._id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(account._id) }, { number_orders: Number(customer.number_orders) + 1 });
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
@@ -113,8 +113,8 @@ async function createOrderWithoutLogin(account, order) {
     user_id = user._id;
   }
   let data_input = {};
-  if(order.payment_method === 'cash'){
-     data_input = {
+  if (order.payment_method === 'cash') {
+    data_input = {
       product_id: order.product_id,
       account_id: user_id,
       image: order.image,
@@ -130,7 +130,7 @@ async function createOrderWithoutLogin(account, order) {
     }
   }
   else {
-     data_input = {
+    data_input = {
       product_id: order.product_id,
       account_id: user_id,
       image: order.image,
@@ -146,16 +146,50 @@ async function createOrderWithoutLogin(account, order) {
     }
   }
   const product = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
-  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, {sold:Number(product.sold) + 1});
-  const costumer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, {number_orders: Number(costumer.number_orders) + 1});
+  await iattModel.product.updateOne({ _id: new ObjectId(order.product_id) }, { sold: Number(product.sold) + 1 });
+  const customer = await iattModel.account.findOne({ _id: new ObjectId(user_id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(user_id) }, { number_orders: Number(customer.number_orders) + 1 });
   const result = await iattModel.order.insertOne(data_input);
   const payment_data = {
     order_id: result.insertedId,
     order_total: order.total,
   }
-  const payUrl = await payment.momo(payment_data);
-  return payUrl;
+  if (order.payment_method === 'cash') {
+    if (customer.email == '') {
+      return {
+        user_id: user_id,
+        phone: customer.phone,
+        password: customer.password
+      }
+    }
+    else {
+      return {
+        user_id: user_id,
+        email: customer.email,
+        password: customer.password,
+      }
+    }
+  }
+  else {
+    const payUrl = await payment.momo(payment_data);
+    if (customer.email == '') {
+      return {
+        user_id: user_id,
+        phone: customer.phone,
+        password: customer.password,
+        payUrl: payUrl
+      }
+    }
+    else {
+      return {
+        user_id: user_id,
+        email: customer.email,
+        password: customer.password,
+        payUrl: payUrl
+      }
+    }
+  }
+  
 }
 
 async function deleteOrder(id) {
@@ -163,8 +197,8 @@ async function deleteOrder(id) {
     deleted_at: new Date(),
   };
   const order = await iattModel.order.findOne({ _id: new ObjectId(id) });
-  const costumer = await iattModel.account.findOne({ _id: new ObjectId(order.account_id) });
-  await iattModel.account.updateOne({ _id: new ObjectId(order.account_id) }, {number_orders: Number(costumer.number_orders) - 1});
+  const customer = await iattModel.account.findOne({ _id: new ObjectId(order.account_id) });
+  await iattModel.account.updateOne({ _id: new ObjectId(order.account_id) }, { number_orders: Number(customer.number_orders) - 1 });
   return iattModel.order.updateOne({ _id: new ObjectId(id) }, dataUpdate);
 }
 
