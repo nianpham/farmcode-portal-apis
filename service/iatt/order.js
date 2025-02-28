@@ -88,6 +88,7 @@ async function createOrderWithoutLogin(account, order) {
   let user = await iattModel.account.findOne({ phone: account.phone });
   const ans = await iattModel.product.findOne({ _id: new ObjectId(order.product_id) });
   let user_id = '';
+  let isAccountExisted = true;
   if (!user) {
     const dataAccount = {
       email: '',
@@ -105,6 +106,7 @@ async function createOrderWithoutLogin(account, order) {
       provinceName: account.provinceName,
       wardName: account.wardName,
     };
+    isAccountExisted = false;
     user = await iattModel.account.insertOne(dataAccount);
     user_id = user.insertedId;
   }
@@ -159,7 +161,8 @@ async function createOrderWithoutLogin(account, order) {
       return {
         user_id: user_id,
         phone: customer.phone,
-        password: customer.password
+        password: customer.password,
+        isAccountExisted: isAccountExisted,
       }
     }
     else {
@@ -167,6 +170,7 @@ async function createOrderWithoutLogin(account, order) {
         user_id: user_id,
         email: customer.email,
         password: customer.password,
+        isAccountExisted: isAccountExisted,
       }
     }
   }
@@ -177,7 +181,8 @@ async function createOrderWithoutLogin(account, order) {
         user_id: user_id,
         phone: customer.phone,
         password: customer.password,
-        payUrl: payUrl
+        payUrl: payUrl,
+        isAccountExisted
       }
     }
     else {
@@ -185,7 +190,8 @@ async function createOrderWithoutLogin(account, order) {
         user_id: user_id,
         email: customer.email,
         password: customer.password,
-        payUrl: payUrl
+        payUrl: payUrl,
+        isAccountExisted
       }
     }
   }
