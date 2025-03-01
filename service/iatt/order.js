@@ -13,7 +13,19 @@ async function getAllOrders() {
 
 async function getAllOrdersById(id) {
   const orders = await iattModel.order.find({ account_id: new ObjectId(id) });
-  return orders
+  const user = await iattModel.account.findOne({ _id: new ObjectId(id) });
+  const user_orders = []
+  for (let i = 0; i < orders.length; i++) {
+    
+    user_orders.push({
+      ...orders[i],
+      phone: user.phone,
+      provinceName : user.provinceName,
+      districtName: user.districtName,
+      wardName: user.wardName,
+    })
+  }
+  return user_orders
     .filter(order => !order.deleted_at);
 }
 
