@@ -61,7 +61,7 @@ function iattRoute(fastify, options, done) {
     fastify.post('/helper/image-ai', iattController.helper.imageAi);
     fastify.post('/helper/smooth-skin', iattController.helper.smoothSkin);
 
-
+    fastify.post('/discount/', iattController.discount.checkDiscount);
     done();
 }
 

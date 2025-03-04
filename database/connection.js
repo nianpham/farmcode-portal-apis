@@ -18,12 +18,14 @@ let _iattProductCol = null;
 let _iattBlogCol = null;
 let _iattOrderCol = null;
 let _iattAccountCol = null;
+let _iattDiscountCol = null;
 let _ieltsvietSliderCol = null;
 let _ieltsvietReviewCol = null;
 let _ieltsvietBlogCol = null;
 let _ieltsvietAccountCol = null;
 let _ieltsvietTimekeepingCol = null;
 let _ieltsvietAuthorCol = null;
+
 
 async function connection(cb) {
   if (db) {
@@ -41,6 +43,7 @@ async function connection(cb) {
     _iattBlogCol = db.collection('iatt_blogs');
     _iattOrderCol = db.collection('iatt_orders');
     _iattAccountCol = db.collection('iatt_accounts');
+    _iattDiscountCol = db.collection('iatt_discounts');
     _ieltsvietSliderCol = db.collection('ieltsviet_sliders');
     _ieltsvietReviewCol = db.collection('ieltsviet_reviews');
     _ieltsvietBlogCol = db.collection('ieltsviet_blogs');
@@ -48,6 +51,7 @@ async function connection(cb) {
     _ieltsvietTimekeepingCol = db.collection('ieltsviet_timekeepings');
     _ieltsvietAuthorCol = db.collection('ieltsviet_authors');
     _helperAddressCol = db.collection('helper_address');
+
 
     await marketWarehouse.createIndex({
       created_at: 1,
@@ -74,6 +78,7 @@ const ieltsvietAccountCol = () => _ieltsvietAccountCol;
 const ieltsvietTimekeepingCol = () => _ieltsvietTimekeepingCol;
 const ieltsvietAuthorCol = () => _ieltsvietAuthorCol;
 const helperAddressCol = () => _helperAddressCol;
+const iattDiscountCol = () => _iattDiscountCol;
 
 module.exports = {
   connection,
@@ -89,4 +94,5 @@ module.exports = {
   ieltsvietTimekeepingCol,
   ieltsvietAuthorCol,
   helperAddressCol,
+  iattDiscountCol,
 };
