@@ -15,6 +15,7 @@ let db = null;
 let _helperAddressCol = null;
 let _ecokaProductCol = null;
 let _iattProductCol = null;
+let _iattCommentCol = null;
 let _iattBlogCol = null;
 let _iattOrderCol = null;
 let _iattAccountCol = null;
@@ -42,6 +43,7 @@ async function connection(cb) {
     _iattProductCol = db.collection('iatt_products');
     _iattBlogCol = db.collection('iatt_blogs');
     _iattOrderCol = db.collection('iatt_orders');
+    _iattCommentCol = db.collection('iatt_comments');
     _iattAccountCol = db.collection('iatt_accounts');
     _iattDiscountCol = db.collection('iatt_discounts');
     _ieltsvietSliderCol = db.collection('ieltsviet_sliders');
@@ -68,6 +70,7 @@ async function connection(cb) {
 
 const ecokaProductCol = () => _ecokaProductCol;
 const iattProductCol = () => _iattProductCol;
+const iattCommentCol = () => _iattCommentCol;
 const iattBlogCol = () => _iattBlogCol;
 const iattOrderCol = () => _iattOrderCol;
 const iattAccountCol = () => _iattAccountCol;
@@ -95,4 +98,5 @@ module.exports = {
   ieltsvietAuthorCol,
   helperAddressCol,
   iattDiscountCol,
+  iattCommentCol
 };

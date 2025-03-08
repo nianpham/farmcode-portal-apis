@@ -62,6 +62,8 @@ function iattRoute(fastify, options, done) {
     fastify.post('/helper/smooth-skin', iattController.helper.smoothSkin);
 
     fastify.post('/discount/', iattController.discount.checkDiscount);
+
+    fastify.get('/comment/:id', iattController.comment.getAllCommentsByProductId);
     done();
 }
 
