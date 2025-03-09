@@ -111,7 +111,8 @@ async function createOrderWithoutLogin(account, order) {
   if (!user) {
     const dataAccount = {
       email: '',
-      password: crypto.randomBytes(8).toString('hex'),
+      // password: crypto.randomBytes(8).toString('hex'),
+      password: account.name + "123",
       name: account.name,
       status: true,
       phone: account.phone,
