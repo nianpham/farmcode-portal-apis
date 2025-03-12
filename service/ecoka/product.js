@@ -2,7 +2,9 @@ const { ecokaModel } = require('~/model');
 const { ObjectId } = require("mongodb");
 
 async function getAllProducts() {
-  return ecokaModel.product.find({});
+  const products = await ecokaModel.product.find({});
+    return products
+      .filter(product => !product.deleted_at);
 }
 
 async function getProductById(id) {
