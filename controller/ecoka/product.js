@@ -1,7 +1,7 @@
 
 const { statusCode, successMessage, failMessage } = require('~/common/message');
 const { ecokaService } = require("~/service");
-
+const { ecokaValidation } = require('~/validation');
 async function getAllProducts(request, reply) {
   try {
     const data = await ecokaService.product.getAllProducts()
@@ -24,7 +24,7 @@ async function getProductById(request, reply) {
 async function createProduct(request, reply) {
   try {
     const body = request.body
-    // ecokaValidation.validate(body, ecokaValidation.ProductSchema.CreateProductSchema, reply);
+    ecokaValidation.validate(body, ecokaValidation.ProductSchema.CreateProductSchema, reply);
     const data = await ecokaService.product.createProduct(body)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
@@ -36,7 +36,7 @@ async function updateProduct(request, reply) {
   try {
     const { id } = request.params
     const body  = request.body
-    // ecokaValidation.validate(body, ecokaValidation.ProductSchema.UpdateProductSchema, reply);
+    ecokaValidation.validate(body, ecokaValidation.ProductSchema.UpdateProductSchema, reply);
     const data = await ecokaService.product.updateProduct(id, body)
     return reply.status(statusCode.success).send({ data: data, message: successMessage.index });
   } catch (err) {
