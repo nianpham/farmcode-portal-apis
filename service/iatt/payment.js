@@ -51,8 +51,6 @@ async function momo(data) {
   return result.data.payUrl;
 }
 
-
-
 module.exports = {
   momo
 };

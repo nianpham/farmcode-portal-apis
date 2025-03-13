@@ -16,6 +16,18 @@ async function updateProduct(id, data) {
 }
 
 async function createProduct(data) {
+  const insert_product = {
+    main_image: data.main_image,
+    side_images: data.side_images,
+    vietnam_name: data.vietnam_name,
+    english_name: data.english_name,
+    japan_name: data.japan_name,
+    vietnam_description: data.vietnam_description,
+    english_description: data.english_description,
+    japan_description: data.japan_description,
+    category: data.category,
+    price: data.price,
+  }
   return await ecokaModel.product.insertOne(data);
 }
 

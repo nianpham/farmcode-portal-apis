@@ -16,7 +16,7 @@ async function getAllOrdersById(id) {
   const user = await iattModel.account.findOne({ _id: new ObjectId(id) });
   const user_orders = []
   for (let i = 0; i < orders.length; i++) {
-    
+
     user_orders.push({
       ...orders[i],
       phone: user.phone,
@@ -225,7 +225,7 @@ async function createOrderWithoutLogin(account, order) {
       }
     }
   }
-  
+
 }
 
 async function deleteOrder(id) {
