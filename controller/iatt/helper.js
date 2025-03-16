@@ -101,7 +101,7 @@ async function imageAi(request, reply) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "x-rapidapi-host": "phototoanime1.p.rapidapi.com",
-        "x-rapidapi-key": "1b0c7df695mshf2d37dd4b59b968p182ad8jsn1ae69ee697fe",
+        "x-rapidapi-key": process.env.RAPID_API_KEY,
         Authorization: "Bearer FIX_ME",
       },
       body: new URLSearchParams({
