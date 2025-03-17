@@ -28,7 +28,7 @@ async function createProduct(data) {
     category: data.category,
     price: data.price,
   }
-  return await ecokaModel.product.insertOne(data);
+  return await ecokaModel.product.insertOne(insert_product);
 }
 
 async function deleteProduct(id) {
