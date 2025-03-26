@@ -279,6 +279,31 @@ async function deleteOrder(id) {
   );
 }
 
+async function createTempAlbumOrder(data) {
+  const data_input = {
+    order_type:'',
+    cover_image:'',
+    size:'',
+    pages:'',
+    album_data: data.album_data,
+    album_cover: data.album_cover,
+    album_core: data.album_core,
+    districtName: '',
+    provinceName: '',
+    wardName: '',
+    address: '',
+    payment_method: '',
+    discount_code: '',
+    discount_price: '',
+    total: '',
+    status: '',
+    date_completed: '',
+    album_price: '',  
+  };
+  const new_order = await iattModel.order.insertOne(data_input);
+  return {order_id: new_order.insertedId};
+}
+
 async function createOrderAlbum(account, order) {
   const { _id, ...accountData } = account;
   await iattModel.account.updateOne(
@@ -293,9 +318,6 @@ async function createOrderAlbum(account, order) {
       cover_image: order.cover_image,
       size: order.size,
       pages: order.pages,
-      album_data: order.album_data,
-      album_cover: order.album_cover,
-      album_core: order.album_core,
       districtName: account.districtName,
       provinceName: account.provinceName,
       wardName: account.wardName,
@@ -315,9 +337,6 @@ async function createOrderAlbum(account, order) {
       cover_image: order.cover_image,
       size: order.size,
       pages: order.pages,
-      album_data: order.album_data,
-      album_cover: order.album_cover,
-      album_core: order.album_core,
       districtName: account.districtName,
       provinceName: account.provinceName,
       wardName: account.wardName,
@@ -338,9 +357,12 @@ async function createOrderAlbum(account, order) {
     { _id: new ObjectId(account._id) },
     { number_orders: Number(customer.number_orders) + 1 }
   );
-  const result = await iattModel.order.insertOne(data_input);
+  const result = await iattModel.order.updateOne(
+    { _id: new ObjectId(order.order_id) },
+    data_input
+  );
   const payment_data = {
-    order_id: result.insertedId,
+    order_id: order.order_id,
     order_total: order.total,
   };
   const payUrl = await payment.momo(payment_data);
@@ -389,9 +411,6 @@ async function createOrderAlbumWithoutLogin(account, order) {
       cover_image: order.cover_image,
       size: order.size,
       pages: order.pages,
-      album_data: order.album_data,
-      album_cover: order.album_cover,
-      album_core: order.album_core,
       districtName: account.districtName,
       provinceName: account.provinceName,
       wardName: account.wardName,
@@ -411,9 +430,6 @@ async function createOrderAlbumWithoutLogin(account, order) {
       cover_image: order.cover_image,
       size: order.size,
       pages: order.pages,
-      album_data: order.album_data,
-      album_cover: order.album_cover,
-      album_core: order.album_core,
       districtName: account.districtName,
       provinceName: account.provinceName,
       wardName: account.wardName,
@@ -434,9 +450,12 @@ async function createOrderAlbumWithoutLogin(account, order) {
     { _id: new ObjectId(user_id) },
     { number_orders: Number(customer.number_orders) + 1 }
   );
-  const result = await iattModel.order.insertOne(data_input);
+  const result = await iattModel.order.updateOne(
+    { _id: new ObjectId(order.order_id) },
+    data_input
+  );
   const payment_data = {
-    order_id: result.insertedId,
+    order_id: order.order_id,
     order_total: order.total,
   };
   if (order.payment_method === 'cash') {
@@ -487,4 +506,5 @@ module.exports = {
   createOrderWithoutLogin,
   createOrderAlbum,
   createOrderAlbumWithoutLogin,
+  createTempAlbumOrder,
 };

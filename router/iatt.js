@@ -71,6 +71,10 @@ function iattRoute(fastify, options, done) {
     iattController.order.createOrderWithoutLogin
   );
   fastify.post(
+    '/temp-order-album/',
+    iattController.order.createTempAlbumOrder
+  );
+  fastify.post(
     '/order-album/',
     iattController.order.createOrderAlbum
   );
