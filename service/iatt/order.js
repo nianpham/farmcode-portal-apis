@@ -281,13 +281,13 @@ async function deleteOrder(id) {
 
 async function createTempAlbumOrder(data) {
   const data_input = {
-    order_type:'',
-    cover_image:'',
-    size:'',
-    pages:'',
+    order_type: '',
+    cover_image: '',
+    size: data.size,
+    pages: data.pages,
     album_data: data.album_data,
-    album_cover: data.album_cover,
-    album_core: data.album_core,
+    album_cover: '',
+    album_core: '',
     districtName: '',
     provinceName: '',
     wardName: '',
@@ -298,10 +298,10 @@ async function createTempAlbumOrder(data) {
     total: '',
     status: '',
     date_completed: '',
-    album_price: '',  
+    album_price: '',
   };
   const new_order = await iattModel.order.insertOne(data_input);
-  return {order_id: new_order.insertedId};
+  return { order_id: new_order.insertedId };
 }
 
 async function createOrderAlbum(account, order) {
