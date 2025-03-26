@@ -384,7 +384,7 @@ async function createOrderAlbumWithoutLogin(account, order) {
   let data_input = {};
   if (order.payment_method === 'cash') {
     data_input = {
-      account_id: new ObjectId(account._id),
+      account_id: user_id,
       order_type: order.order_type,
       cover_image: order.cover_image,
       size: order.size,
@@ -406,7 +406,7 @@ async function createOrderAlbumWithoutLogin(account, order) {
     };
   } else {
     data_input = {
-      account_id: new ObjectId(account._id),
+      account_id: user_id,
       order_type: order.order_type,
       cover_image: order.cover_image,
       size: order.size,
