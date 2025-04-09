@@ -1,3 +1,5 @@
 module.exports = {
   product: require('~/model/ecoka/product'),
+  blog: require('~/model/ecoka/blog'),
+  esg: require('~/model/ecoka/esg'),
 };

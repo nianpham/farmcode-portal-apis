@@ -14,6 +14,8 @@ let client = null;
 let db = null;
 let _helperAddressCol = null;
 let _ecokaProductCol = null;
+let _ecokaBlogCol = null;
+let _ecokaEsgCol = null;
 let _iattProductCol = null;
 let _iattCommentCol = null;
 let _iattBlogCol = null;
@@ -40,6 +42,8 @@ async function connection(cb) {
     db = client.db(dbName);
     marketWarehouse = db.collection('market_warehouses');
     _ecokaProductCol = db.collection('ecoka_products');
+    _ecokaBlogCol = db.collection('ecoka_blogs');
+    _ecokaEsgCol = db.collection('ecoka_esgs');
     _iattProductCol = db.collection('iatt_products');
     _iattBlogCol = db.collection('iatt_blogs');
     _iattOrderCol = db.collection('iatt_orders');
@@ -69,6 +73,8 @@ async function connection(cb) {
 }
 
 const ecokaProductCol = () => _ecokaProductCol;
+const ecokaBlogCol = () => _ecokaBlogCol;
+const ecokaEsgCol = () => _ecokaEsgCol;
 const iattProductCol = () => _iattProductCol;
 const iattCommentCol = () => _iattCommentCol;
 const iattBlogCol = () => _iattBlogCol;
@@ -83,9 +89,12 @@ const ieltsvietAuthorCol = () => _ieltsvietAuthorCol;
 const helperAddressCol = () => _helperAddressCol;
 const iattDiscountCol = () => _iattDiscountCol;
 
+
 module.exports = {
   connection,
   ecokaProductCol,
+  ecokaBlogCol,
+  ecokaEsgCol,
   iattProductCol,
   iattBlogCol,
   iattOrderCol,

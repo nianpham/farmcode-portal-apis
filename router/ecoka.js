@@ -6,6 +6,15 @@ function ecokaRoute(fastify, options, done) {
     fastify.post('/product/', ecokaController.product.createProduct);
     fastify.put('/product/:id', ecokaController.product.updateProduct);
     fastify.delete('/product/:id', ecokaController.product.deleteProduct);
+
+    fastify.get('/blog', ecokaController.blog.getAllBlogs);
+    fastify.get('/blog/:id', ecokaController.blog.getBlogById);
+    fastify.post('/blog/', ecokaController.blog.createBlog);
+    fastify.put('/blog/:id', ecokaController.blog.updateBlog);
+    fastify.delete('/blog/:id', ecokaController.blog.deleteBlog);
+
+    fastify.get('/esg', ecokaController.esg.getAllEsgs);
+    fastify.put('/esg/:id', ecokaController.esg.updateEsg);
     done();
 }
 
