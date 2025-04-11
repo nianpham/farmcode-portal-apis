@@ -15,6 +15,9 @@ function ecokaRoute(fastify, options, done) {
 
     fastify.get('/esg', ecokaController.esg.getAllEsgs);
     fastify.put('/esg/:id', ecokaController.esg.updateEsg);
+
+    fastify.get('/enterprise', ecokaController.enterprise.getAllEnterprises);
+    fastify.put('/enterprise/:id', ecokaController.enterprise.updateEnterprise);
     done();
 }
 

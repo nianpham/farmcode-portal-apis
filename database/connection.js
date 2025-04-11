@@ -16,6 +16,7 @@ let _helperAddressCol = null;
 let _ecokaProductCol = null;
 let _ecokaBlogCol = null;
 let _ecokaEsgCol = null;
+let _ecokaEnterpriseCol = null;
 let _iattProductCol = null;
 let _iattCommentCol = null;
 let _iattBlogCol = null;
@@ -28,7 +29,6 @@ let _ieltsvietBlogCol = null;
 let _ieltsvietAccountCol = null;
 let _ieltsvietTimekeepingCol = null;
 let _ieltsvietAuthorCol = null;
-
 
 async function connection(cb) {
   if (db) {
@@ -44,6 +44,7 @@ async function connection(cb) {
     _ecokaProductCol = db.collection('ecoka_products');
     _ecokaBlogCol = db.collection('ecoka_blogs');
     _ecokaEsgCol = db.collection('ecoka_esgs');
+    _ecokaEnterpriseCol = db.collection('ecoka_enterprises');
     _iattProductCol = db.collection('iatt_products');
     _iattBlogCol = db.collection('iatt_blogs');
     _iattOrderCol = db.collection('iatt_orders');
@@ -75,6 +76,7 @@ async function connection(cb) {
 const ecokaProductCol = () => _ecokaProductCol;
 const ecokaBlogCol = () => _ecokaBlogCol;
 const ecokaEsgCol = () => _ecokaEsgCol;
+const ecokaEnterpriseCol = () => _ecokaEnterpriseCol;
 const iattProductCol = () => _iattProductCol;
 const iattCommentCol = () => _iattCommentCol;
 const iattBlogCol = () => _iattBlogCol;
@@ -95,6 +97,7 @@ module.exports = {
   ecokaProductCol,
   ecokaBlogCol,
   ecokaEsgCol,
+  ecokaEnterpriseCol,
   iattProductCol,
   iattBlogCol,
   iattOrderCol,
