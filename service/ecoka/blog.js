@@ -1,5 +1,6 @@
 const { ecokaModel } = require('~/model');
 const { ObjectId } = require("mongodb");
+const { author } = require('model/ieltsviet');
 
 async function getAllBlogs() {
   const blogs = await ecokaModel.blog.find({});
@@ -17,6 +18,7 @@ async function updateBlog(id, data) {
 
 async function createBlog(data) {
   const insert_blog = {
+    author: data.author,
     s1_title_vn: data.s1_title_vn,
     s1_title_en: data.s1_title_en,
     s1_title_jp: data.s1_title_jp,
