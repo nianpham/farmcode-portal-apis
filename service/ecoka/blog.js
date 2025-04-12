@@ -1,11 +1,9 @@
 const { ecokaModel } = require('~/model');
-const { ObjectId } = require("mongodb");
-const { author } = require('model/ieltsviet');
+const { ObjectId } = require('mongodb');
 
 async function getAllBlogs() {
   const blogs = await ecokaModel.blog.find({});
-  return blogs
-    .filter(blog => !blog.deleted_at);
+  return blogs.filter((blog) => !blog.deleted_at);
 }
 
 async function getBlogById(id) {
@@ -47,8 +45,7 @@ async function createBlog(data) {
     s4_content_en: data.s4_content_en,
     s4_content_jp: data.s4_content_jp,
     s4_thumbnail: data.s4_thumbnail,
-
-  }
+  };
   return await ecokaModel.blog.insertOne(insert_blog);
 }
 
@@ -56,7 +53,10 @@ async function deleteBlog(id) {
   const dataUpdate = {
     deleted_at: new Date(),
   };
-  return ecokaModel.blog.updateOne({ _id: new ObjectId(id) }, dataUpdate);
+  return ecokaModel.blog.updateOne(
+    { _id: new ObjectId(id) },
+    dataUpdate
+  );
 }
 
 module.exports = {
@@ -64,5 +64,5 @@ module.exports = {
   getBlogById,
   createBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
 };
