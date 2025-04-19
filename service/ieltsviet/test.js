@@ -144,7 +144,17 @@ async function getAllSkillTests(type) {
 async function getPart(id) {
   const part = await ieltsvietModel.testpart.findOne({
     _id: new ObjectId(id),
+    deleted_at: { $exists: false }
   });
+  let questions = [];
+  for (const question of part.question) {
+    const questionData = await ieltsvietModel.question.findOne({
+      _id: new ObjectId(question),
+      deleted_at: { $exists: false }
+    });
+    questions.push(questionData);
+  }
+  part.question = questions;
   return part
 }
 
