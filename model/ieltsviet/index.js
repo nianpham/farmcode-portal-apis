@@ -4,5 +4,12 @@ module.exports = {
   blog: require('~/model/ieltsviet/blog'),
   account: require('~/model/ieltsviet/account'),
   timekeeping: require('~/model/ieltsviet/timekeeping'),
-  author: require('~/model/ieltsviet/author')
+  author: require('~/model/ieltsviet/author'),
+  user: require('~/model/ieltsviet/user'),
+  btest: require('~/model/ieltsviet/btest'),
+  stest: require('~/model/ieltsviet/stest'),
+  testpart: require('~/model/ieltsviet/testpart'),
+  question: require('~/model/ieltsviet/question'),
+  completepart: require('~/model/ieltsviet/completepart'),
+  testcollection: require('~/model/ieltsviet/testcollection'),
 };

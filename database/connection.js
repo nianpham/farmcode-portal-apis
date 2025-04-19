@@ -29,6 +29,13 @@ let _ieltsvietBlogCol = null;
 let _ieltsvietAccountCol = null;
 let _ieltsvietTimekeepingCol = null;
 let _ieltsvietAuthorCol = null;
+let _ieltsvietUserCol = null;
+let _ieltsvietBtestCol = null;
+let _ieltsvietStestCol = null;
+let _ieltsvietTestpartCol = null;
+let _ieltsvietQuestionCol = null;
+let _ieltsvietCompletepartCol = null;
+let _ieltsvietTestcollectionCol = null;
 
 async function connection(cb) {
   if (db) {
@@ -57,6 +64,13 @@ async function connection(cb) {
     _ieltsvietAccountCol = db.collection('ieltsviet_accounts');
     _ieltsvietTimekeepingCol = db.collection('ieltsviet_timekeepings');
     _ieltsvietAuthorCol = db.collection('ieltsviet_authors');
+    _ieltsvietUserCol = db.collection('ieltsviet_users');
+    _ieltsvietBtestCol = db.collection('ieltsviet_btests');
+    _ieltsvietStestCol = db.collection('ieltsviet_stests');
+    _ieltsvietTestpartCol = db.collection('ieltsviet_testparts');
+    _ieltsvietQuestionCol = db.collection('ieltsviet_questions');
+    _ieltsvietCompletepartCol = db.collection('ieltsviet_completeparts');
+    _ieltsvietTestcollectionCol = db.collection('ieltsviet_testcollections');
     _helperAddressCol = db.collection('helper_address');
 
 
@@ -82,14 +96,22 @@ const iattCommentCol = () => _iattCommentCol;
 const iattBlogCol = () => _iattBlogCol;
 const iattOrderCol = () => _iattOrderCol;
 const iattAccountCol = () => _iattAccountCol;
+const iattDiscountCol = () => _iattDiscountCol;
 const ieltsvietSliderCol = () => _ieltsvietSliderCol;
 const ieltsvietReviewCol = () => _ieltsvietReviewCol;
 const ieltsvietBlogCol = () => _ieltsvietBlogCol;
 const ieltsvietAccountCol = () => _ieltsvietAccountCol;
 const ieltsvietTimekeepingCol = () => _ieltsvietTimekeepingCol;
 const ieltsvietAuthorCol = () => _ieltsvietAuthorCol;
+const ieltsvietUserCol = () => _ieltsvietUserCol;
 const helperAddressCol = () => _helperAddressCol;
-const iattDiscountCol = () => _iattDiscountCol;
+const ieltsvietBtestCol = () => _ieltsvietBtestCol;
+const ieltsvietStestCol = () => _ieltsvietStestCol;
+const ieltsvietTestpartCol = () => _ieltsvietTestpartCol;
+const ieltsvietQuestionCol = () => _ieltsvietQuestionCol;
+const ieltsvietCompletepartCol = () => _ieltsvietCompletepartCol;
+const ieltsvietTestcollectionCol = () => _ieltsvietTestcollectionCol;
+
 
 
 module.exports = {
@@ -102,13 +124,21 @@ module.exports = {
   iattBlogCol,
   iattOrderCol,
   iattAccountCol,
+  iattDiscountCol,
+  iattCommentCol,
   ieltsvietSliderCol,
   ieltsvietReviewCol,
   ieltsvietBlogCol,
   ieltsvietAccountCol,
   ieltsvietTimekeepingCol,
   ieltsvietAuthorCol,
+  ieltsvietUserCol,
+  ieltsvietBtestCol,
+  ieltsvietStestCol,
+  ieltsvietTestpartCol,
+  ieltsvietQuestionCol,
+  ieltsvietCompletepartCol,
+  ieltsvietTestcollectionCol,
   helperAddressCol,
-  iattDiscountCol,
-  iattCommentCol
+
 };
