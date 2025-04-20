@@ -188,6 +188,7 @@ async function createSkillTest(data) {
           type: 'R',
           parts: [],
           name: data.name,
+          thumbnail: data.thumbnail,
           time: data.time,
         };
         const stest = await ieltsvietModel.stest.insertOne(data_insert_r);
@@ -255,6 +256,7 @@ async function createSkillTest(data) {
           type: 'L',
           parts: [],
           name: data.name,
+          thumbnail: data.thumbnail,
           time: data.time,
         };
         const stest_l = await ieltsvietModel.stest.insertOne(data_insert_l);
@@ -321,6 +323,7 @@ async function createSkillTest(data) {
           type: 'W',
           parts: [],
           name: data.name,
+          thumbnail: data.thumbnail,
           time: data.time,
         };
         const stest_w = await ieltsvietModel.stest.insertOne(data_insert_w);
