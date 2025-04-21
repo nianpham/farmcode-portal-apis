@@ -1,10 +1,9 @@
 const { iattModel } = require('~/model');
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require('mongodb');
 
 async function getAllProducts() {
   const products = await iattModel.product.find({});
-  return products
-    .filter(product => !product.deleted_at);
+  return products.filter((product) => !product.deleted_at);
 }
 
 async function getProduct(id) {
@@ -23,7 +22,10 @@ async function deleteProduct(id) {
   const dataUpdate = {
     deleted_at: new Date(),
   };
-  return iattModel.product.updateOne({ _id: new ObjectId(id) }, dataUpdate);
+  return iattModel.product.updateOne(
+    { _id: new ObjectId(id) },
+    dataUpdate
+  );
 }
 
 module.exports = {
@@ -31,5 +33,5 @@ module.exports = {
   getProduct,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 };
