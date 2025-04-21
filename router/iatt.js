@@ -44,38 +44,38 @@ function iattRoute(fastify, options, done) {
     iattController.account.changePassword
   );
 
-  fastify.get('/product/', iattController.product.getAllProducts);
+  fastify.get('/product', iattController.product.getAllProducts);
   fastify.get('/product/:id', iattController.product.getProduct);
-  fastify.post('/product/', iattController.product.createProduct);
+  fastify.post('/product', iattController.product.createProduct);
   fastify.put('/product/:id', iattController.product.updateProduct);
   fastify.delete(
     '/product/:id',
     iattController.product.deleteProduct
   );
 
-  fastify.get('/blog/', iattController.blog.getAllBlogs);
+  fastify.get('/blog', iattController.blog.getAllBlogs);
   fastify.get('/blog/:id', iattController.blog.getBlog);
-  fastify.post('/blog/', iattController.blog.createBlog);
+  fastify.post('/blog', iattController.blog.createBlog);
   fastify.put('/blog/:id', iattController.blog.updateBlog);
   fastify.delete('/blog/:id', iattController.blog.deleteBlog);
 
-  fastify.get('/order/', iattController.order.getAllOrders);
+  fastify.get('/order', iattController.order.getAllOrders);
   fastify.get(
     '/order/get-all/:id',
     iattController.order.getAllOrdersById
   );
   fastify.get('/order/:id', iattController.order.getOrder);
-  fastify.post('/order/', iattController.order.createOrder);
+  fastify.post('/order', iattController.order.createOrder);
   fastify.post(
     '/order/no-login',
     iattController.order.createOrderWithoutLogin
   );
   fastify.post(
-    '/temp-order-album/',
+    '/temp-order-album',
     iattController.order.createTempAlbumOrder
   );
   fastify.post(
-    '/order-album/',
+    '/order-album',
     iattController.order.createOrderAlbum
   );
   fastify.post(
@@ -106,7 +106,7 @@ function iattRoute(fastify, options, done) {
     iattController.helper.smoothSkin
   );
 
-  fastify.post('/discount/', iattController.discount.checkDiscount);
+  fastify.post('/discount', iattController.discount.checkDiscount);
 
   fastify.get(
     '/comment/:id',
