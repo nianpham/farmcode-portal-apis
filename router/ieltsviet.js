@@ -17,9 +17,9 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.put('/blog/:id', ieltsvietController.blog.updateBlog);
     fastify.delete('/blog/:id', ieltsvietController.blog.deleteBlog);
 
-    fastify.get('/account', ieltsvietController.account.getAllAccounts);
+    fastify.get('/account/', ieltsvietController.account.getAllAccounts);
     fastify.get('/account/:id', ieltsvietController.account.getAccount);
-    fastify.post('/account', ieltsvietController.account.createAccount);
+    fastify.post('/account/', ieltsvietController.account.createAccount);
     fastify.put('/account/:id', ieltsvietController.account.updateAccount);
     fastify.delete('/account/:id', ieltsvietController.account.deleteAccount);
     fastify.post('/account/:id', ieltsvietController.account.login);
@@ -27,14 +27,14 @@ function ieltsvietRoute(fastify, options, done) {
     fastify.get('/account/search-day', ieltsvietController.account.searchInDay);
     fastify.get('/account/search-month/:month', ieltsvietController.account.searchInMonth);
 
-    fastify.get('/author', ieltsvietController.author.getAllAuthors);
+    fastify.get('/author/', ieltsvietController.author.getAllAuthors);
     fastify.get('/author/:id', ieltsvietController.author.getAuthor);
 
-    fastify.get('/timekeeping', ieltsvietController.timekeeping.getAllTimekeepings);
+    fastify.get('/timekeeping/', ieltsvietController.timekeeping.getAllTimekeepings);
     fastify.get('/timekeeping/:id', ieltsvietController.timekeeping.getTimekeeping);
 
     fastify.post('/user/login', ieltsvietController.user.loginUser);
-    fastify.get('/user', ieltsvietController.user.getAllUsers);
+    fastify.get('/user/', ieltsvietController.user.getAllUsers);
     fastify.get('/user/:id', ieltsvietController.user.getUser);
     fastify.post('/user', ieltsvietController.user.createUser);
     fastify.put('/user/:id', ieltsvietController.user.updateUser);
