@@ -8,7 +8,7 @@ async function routes(fastify) {
   fastify.register(helperRoute, { prefix: '/helper' });
   fastify.register(ecokaRoute, { prefix: '/ecoka' });
   fastify.register(iattRoute, { prefix: '/inanhtructuyen' });
-  fastify.register(ieltsvietRoute, { prefix: '/ielts-viet' });
+  // fastify.register(ieltsvietRoute, { prefix: '/ielts-viet' });
   fastify.register(botBridgeRoute, { prefix: '/bot-bridge' });
 }
 
