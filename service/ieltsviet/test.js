@@ -93,6 +93,7 @@ async function createTest(data) {
   const full_test_insert = {
     name: data.name,
     thumbnail: data.thumbnail,
+    description: data.description,
     r_id: r_id,
     l_id: l_id,
     w_id: w_id,
