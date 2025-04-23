@@ -4,15 +4,14 @@ const crypto = require('crypto');
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
-  return collections
-    .filter((collection) => !collection.deleted_at)
+  return collections.filter((collection) => !collection.deleted_at);
 }
 
 async function getCollection(id) {
   const collection = await ieltsvietModel.testcollection.findOne({
     _id: new ObjectId(id),
   });
-  return collection
+  return collection;
 }
 
 async function updateCollection(id, data) {
@@ -32,13 +31,14 @@ async function createCollection(data) {
     name: data.name,
     full_tests: full_tests,
   };
-  const insertedCollection = await ieltsvietModel.testcollection.insertOne(data_insert);
+  const insertedCollection =
+    await ieltsvietModel.testcollection.insertOne(data_insert);
   return {
     message: 'Create collection successfully',
     data: {
       collection_id: insertedCollection.insertedId,
     },
-  }
+  };
 }
 
 async function deleteCollection(id) {
@@ -53,15 +53,14 @@ async function deleteCollection(id) {
 
 async function getAllTests() {
   const tests = await ieltsvietModel.btest.find({});
-  return tests
-    .filter((test) => !test.deleted_at)
+  return tests.filter((test) => !test.deleted_at);
 }
 
 async function getTest(id) {
   const test = await ieltsvietModel.btest.findOne({
     _id: new ObjectId(id),
   });
-  return test
+  return test;
 }
 
 async function updateTest(id, data) {
@@ -93,17 +92,19 @@ async function createTest(data) {
   }
   const full_test_insert = {
     name: data.name,
+    thumbnail: data.thumbnail,
     r_id: r_id,
     l_id: l_id,
     w_id: w_id,
-  }
-  const insertedFullTest = await ieltsvietModel.btest.insertOne(full_test_insert);
+  };
+  const insertedFullTest =
+    await ieltsvietModel.btest.insertOne(full_test_insert);
   return {
     message: 'Create test successfully',
     data: {
       test_id: insertedFullTest.insertedId,
     },
-  }
+  };
 }
 
 async function deleteTest(id) {
@@ -133,43 +134,41 @@ async function getAllSkillTests(type) {
     var tests = await ieltsvietModel.stest.find({
       type: skill,
     });
-  }
-  else {
+  } else {
     var tests = await ieltsvietModel.stest.find({});
   }
-  return tests
-    .filter((test) => !test.deleted_at)
+  return tests.filter((test) => !test.deleted_at);
 }
 
 async function getPart(id) {
   const part = await ieltsvietModel.testpart.findOne({
     _id: new ObjectId(id),
-    deleted_at: { $exists: false }
+    deleted_at: { $exists: false },
   });
   let questions = [];
   for (const question of part.question) {
     const questionData = await ieltsvietModel.question.findOne({
       _id: new ObjectId(question),
-      deleted_at: { $exists: false }
+      deleted_at: { $exists: false },
     });
     questions.push(questionData);
   }
   part.question = questions;
-  return part
+  return part;
 }
 
 async function getQuestion(id) {
   const question = await ieltsvietModel.question.findOne({
     _id: new ObjectId(id),
   });
-  return question
+  return question;
 }
 
 async function getSkillTest(id) {
   const test = await ieltsvietModel.stest.findOne({
     _id: new ObjectId(id),
   });
-  return test
+  return test;
 }
 
 async function updateSkillTest(id, data) {
@@ -191,7 +190,8 @@ async function createSkillTest(data) {
           thumbnail: data.thumbnail,
           time: data.time,
         };
-        const stest = await ieltsvietModel.stest.insertOne(data_insert_r);
+        const stest =
+          await ieltsvietModel.stest.insertOne(data_insert_r);
         testId = stest.insertedId;
 
         for (const part of data.parts) {
@@ -203,7 +203,8 @@ async function createSkillTest(data) {
             part_num: part.part_num,
             question: [],
           };
-          const insertedPart = await ieltsvietModel.testpart.insertOne(part_insert_r);
+          const insertedPart =
+            await ieltsvietModel.testpart.insertOne(part_insert_r);
           await ieltsvietModel.stest.updateOne(
             { _id: stest.insertedId },
             { $addToSet: { parts: insertedPart.insertedId } }
@@ -240,9 +241,14 @@ async function createSkillTest(data) {
                 };
                 break;
               default:
-                throw new Error(`Invalid question type: ${question.q_type}`);
+                throw new Error(
+                  `Invalid question type: ${question.q_type}`
+                );
             }
-            const insertedQuestion = await ieltsvietModel.question.insertOne(question_insert_r);
+            const insertedQuestion =
+              await ieltsvietModel.question.insertOne(
+                question_insert_r
+              );
             await ieltsvietModel.testpart.updateOne(
               { _id: insertedPart.insertedId },
               { $addToSet: { question: insertedQuestion.insertedId } }
@@ -259,7 +265,8 @@ async function createSkillTest(data) {
           thumbnail: data.thumbnail,
           time: data.time,
         };
-        const stest_l = await ieltsvietModel.stest.insertOne(data_insert_l);
+        const stest_l =
+          await ieltsvietModel.stest.insertOne(data_insert_l);
         testId = stest_l.insertedId;
 
         for (const part of data.parts) {
@@ -270,7 +277,8 @@ async function createSkillTest(data) {
             part_num: part.part_num,
             question: [],
           };
-          const insertedPart = await ieltsvietModel.testpart.insertOne(part_insert_l);
+          const insertedPart =
+            await ieltsvietModel.testpart.insertOne(part_insert_l);
           await ieltsvietModel.stest.updateOne(
             { _id: stest_l.insertedId },
             { $addToSet: { parts: insertedPart.insertedId } }
@@ -307,9 +315,14 @@ async function createSkillTest(data) {
                 };
                 break;
               default:
-                throw new Error(`Invalid question type: ${question.q_type}`);
+                throw new Error(
+                  `Invalid question type: ${question.q_type}`
+                );
             }
-            const insertedQuestion = await ieltsvietModel.question.insertOne(question_insert_l);
+            const insertedQuestion =
+              await ieltsvietModel.question.insertOne(
+                question_insert_l
+              );
             await ieltsvietModel.testpart.updateOne(
               { _id: insertedPart.insertedId },
               { $addToSet: { question: insertedQuestion.insertedId } }
@@ -326,7 +339,8 @@ async function createSkillTest(data) {
           thumbnail: data.thumbnail,
           time: data.time,
         };
-        const stest_w = await ieltsvietModel.stest.insertOne(data_insert_w);
+        const stest_w =
+          await ieltsvietModel.stest.insertOne(data_insert_w);
         testId = stest_w.insertedId;
 
         for (const part of data.parts) {
@@ -336,7 +350,8 @@ async function createSkillTest(data) {
             part_num: part.part_num,
             question: [],
           };
-          const insertedPart = await ieltsvietModel.testpart.insertOne(part_insert_w);
+          const insertedPart =
+            await ieltsvietModel.testpart.insertOne(part_insert_w);
           await ieltsvietModel.stest.updateOne(
             { _id: stest_w.insertedId },
             { $addToSet: { parts: insertedPart.insertedId } }
@@ -373,9 +388,14 @@ async function createSkillTest(data) {
                 };
                 break;
               default:
-                throw new Error(`Invalid question type: ${question.q_type}`);
+                throw new Error(
+                  `Invalid question type: ${question.q_type}`
+                );
             }
-            const insertedQuestion = await ieltsvietModel.question.insertOne(question_insert_w);
+            const insertedQuestion =
+              await ieltsvietModel.question.insertOne(
+                question_insert_w
+              );
             await ieltsvietModel.testpart.updateOne(
               { _id: insertedPart.insertedId },
               { $addToSet: { question: insertedQuestion.insertedId } }
@@ -414,7 +434,7 @@ async function createSubmit(data) {
   for (const part of data.parts) {
     const testpart = await ieltsvietModel.testpart.findOne({
       _id: new ObjectId(part.part_id),
-      deleted_at: { $exists: false }
+      deleted_at: { $exists: false },
     });
     if (testpart.type === 'R' || testpart.type === 'L') {
       let correct_count = 0;
@@ -423,13 +443,15 @@ async function createSubmit(data) {
         let is_correct = false;
         const question = await ieltsvietModel.question.findOne({
           _id: new ObjectId(user_answer.question_id),
-          deleted_at: { $exists: false }
+          deleted_at: { $exists: false },
         });
         if (question) {
           if (question.q_type === 'MP' || question.q_type === 'FB') {
             if (
               question.answer.length === user_answer.answer.length &&
-              question.answer.every((val, index) => val === user_answer.answer[index])
+              question.answer.every(
+                (val, index) => val === user_answer.answer[index]
+              )
             ) {
               correct_count++;
               is_correct = true;
@@ -438,7 +460,7 @@ async function createSubmit(data) {
               question_id: user_answer.question_id,
               answer: user_answer.answer,
               correct_answer: question.answer,
-              is_correct
+              is_correct,
             });
           }
         }
@@ -450,13 +472,12 @@ async function createSubmit(data) {
         correct_count: correct_count,
         is_complete: part.is_complete,
       });
-    }
-    else if (part.type === 'W') {
+    } else if (part.type === 'W') {
       let user_answers = [];
       for (const user_answer of part.user_answers) {
         const question = await ieltsvietModel.question.findOne({
           _id: new ObjectId(user_answer.question_id),
-          deleted_at: { $exists: false }
+          deleted_at: { $exists: false },
         });
         if (question) {
           if (question.q_type === 'W') {
@@ -480,14 +501,15 @@ async function createSubmit(data) {
     user_id: data.user_id,
     parts: parts,
   };
-  const insertedSubmit = await ieltsvietModel.completepart.insertOne(data_insert);
+  const insertedSubmit =
+    await ieltsvietModel.completepart.insertOne(data_insert);
   return {
     message: 'Create submit successfully',
     data: {
       submit_id: insertedSubmit.insertedId,
       result: parts,
     },
-  }
+  };
 }
 
 module.exports = {
