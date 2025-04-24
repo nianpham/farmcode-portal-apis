@@ -439,9 +439,14 @@ async function createSubmit(data) {
     });
     if (testpart.type === 'R' || testpart.type === 'L') {
       let correct_count = 0;
+      let incorrect_count = 0;
+      let pass_count = 0;
       let user_answers = [];
       for (const user_answer of part.user_answers) {
         let is_correct = false;
+        let is_incorrect = false;
+        let is_pass = false;
+
         const question = await ieltsvietModel.question.findOne({
           _id: new ObjectId(user_answer.question_id),
           deleted_at: { $exists: false },
@@ -456,12 +461,25 @@ async function createSubmit(data) {
             ) {
               correct_count++;
               is_correct = true;
+            } else if (
+              user_answer.answer.length === 0 &&
+              question.answer.length !== user_answer.answer.length
+            ) {
+              pass_count++;
+              is_pass = true;
+            } else if (
+              user_answer.answer.length !== 0 &&
+              question.answer !== user_answer.answer
+            ) {
+              incorrect_count++;
+              is_incorrect = true;
             }
             user_answers.push({
               question_id: user_answer.question_id,
               answer: user_answer.answer,
               correct_answer: question.answer,
               is_correct,
+              is_pass,
             });
           }
         }
@@ -471,6 +489,8 @@ async function createSubmit(data) {
         part_id: part.part_id,
         user_answers: user_answers,
         correct_count: correct_count,
+        incorrect_count: incorrect_count,
+        pass_count: pass_count,
         is_complete: part.is_complete,
       });
     } else if (part.type === 'W') {
