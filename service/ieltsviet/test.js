@@ -218,6 +218,7 @@ async function createSkillTest(data) {
                 question_insert_r = {
                   q_type: 'MP',
                   part_id: insertedPart.insertedId,
+                  question: question.question,
                   choices: question.choices,
                   isMultiple: question.isMultiple,
                   answer: question.answer,
@@ -292,6 +293,7 @@ async function createSkillTest(data) {
                 question_insert_l = {
                   q_type: 'MP',
                   part_id: insertedPart.insertedId,
+                  question: question.question,
                   choices: question.choices,
                   isMultiple: question.isMultiple,
                   answer: question.answer,
@@ -446,7 +448,6 @@ async function createSubmit(data) {
         let is_correct = false;
         let is_incorrect = false;
         let is_pass = false;
-
         const question = await ieltsvietModel.question.findOne({
           _id: new ObjectId(user_answer.question_id),
           deleted_at: { $exists: false },
