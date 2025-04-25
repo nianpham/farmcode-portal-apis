@@ -479,6 +479,7 @@ async function createSubmit(data) {
             }
             user_answers.push({
               question_id: user_answer.question_id,
+              q_type: question.q_type,
               answer: user_answer.answer,
               correct_answer: question.answer,
               is_correct,
