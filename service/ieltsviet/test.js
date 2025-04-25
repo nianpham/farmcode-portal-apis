@@ -1,6 +1,7 @@
 const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
+const { log } = require('console');
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
@@ -461,6 +462,7 @@ async function createSubmit(data) {
               )
             ) {
               correct_count++;
+              console.log('correct_count', correct_count);
               is_correct = true;
             } else if (
               user_answer.answer.length === 0 &&
