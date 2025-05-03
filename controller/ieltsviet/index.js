@@ -1,5 +1,7 @@
+
 module.exports = {
   slider: require('~/controller/ieltsviet/slider'),
+  auth: require('~/controller/ieltsviet/auth'),
   review: require('~/controller/ieltsviet/review'),
   blog: require('~/controller/ieltsviet/blog'),
   account: require('~/controller/ieltsviet/account'),

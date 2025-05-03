@@ -2,6 +2,12 @@ const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 const { log } = require('console');
+const OpenAI = require('openai');
+const { user } = require('.');
+
+const openAIClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
@@ -537,6 +543,67 @@ async function createSubmit(data) {
   };
 }
 
+async function askChatGPT(userMessage) {
+  const chatCompletion = await openAIClient.chat.completions.create({
+    model: 'gpt-4o-mini',
+    store: true,
+    temperature: 0.7,
+    max_tokens: 1000,
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You are an expert in the field of marking ielts writing and give advice to improve ielts writing.',
+      },
+      {
+        role: 'user',
+        content: `
+        Below is 2 IELTS Writing Task 1 and Task 2 with questions and answers. Please rate the 2 essays to get your IELTS Writing score. Then give an overall assessment of each essay, strengths, weaknesses, vocabulary errors, sentence structure errors, and areas for improvement in each essay.
+        
+        Write output under only json format like this form: 
+        {
+          score: {
+            writing_task_1_score: ,
+            writing_task_2_score:
+          },
+          [
+            {
+              writing_task: 1,
+              general assessment: "",
+              strength: "",
+              weakness: "",
+              vocabulary: "",
+              sentence_structure_error: "",
+              improvement_sentences: ""
+            },
+            {
+              writing_task: 2,
+              ...
+            }
+          ]
+        }
+        
+        Here is the questions and answers of 2 IELTS Writing test:
+        
+        IELTS Writing Task 1:
+        Question: ${userMessage.question_1}
+        
+        ${userMessage.image_1 !== '' ? `Task 1 Image: ${userMessage.image_1}` : 'Task 1 Image: No image provided'}
+        
+        Answer: ${userMessage.answer_1}
+        
+        IELTS Writing Task 2:
+        Questions: ${userMessage.question_2}
+        
+        ${userMessage.image_2 !== '' ? `Task 2 Image: ${userMessage.image_2}` : 'Task 2 Image: No image provided'}
+        
+        Answer: ${userMessage.answer_2}`,
+      },
+    ],
+  });
+  return chatCompletion.choices[0].message.content;
+}
+
 module.exports = {
   getAllCollections,
   getCollection,
@@ -556,4 +623,5 @@ module.exports = {
   getPart,
   getQuestion,
   createSubmit,
+  askChatGPT,
 };

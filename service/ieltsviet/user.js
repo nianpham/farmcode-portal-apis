@@ -51,9 +51,10 @@ async function loginUser(data) {
 
 async function createUser(data) {
   const data_insert = {
-    user_name : data.user_name,
-    email : data.email,
-    password : data.password,
+    // user_name : data.user_name,
+    // email : data.email,
+    // password : data.password,
+    ...data,
   };
   return await ieltsvietModel.user.insertOne(data_insert);
 }
@@ -68,6 +69,10 @@ async function deleteUser(id) {
   );
 }
 
+async function getAccountByEmail(data) {
+  return ieltsvietModel.account.findOne({ email: data.email });
+}
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -75,4 +80,5 @@ module.exports = {
   loginUser,
   createUser,
   deleteUser,
+  getAccountByEmail
 };
