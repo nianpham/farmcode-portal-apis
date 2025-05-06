@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { log } = require('console');
 const OpenAI = require('openai');
 const { user } = require('.');
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 
 const openAIClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -555,20 +555,45 @@ async function createSubmit(data) {
   };
 }
 
+// async function convertImageUrlToBase64(imageUrl) {
+//   try {
+//     if (!imageUrl) {
+//       return null;
+//     }
+
+//     const response = await fetch(imageUrl);
+//     if (!response.ok) {
+//       throw new Error(
+//         `Failed to fetch image from ${imageUrl}: ${response.statusText}`
+//       );
+//     }
+
+//     // Get the image as an array buffer and determine MIME type
+//     const arrayBuffer = await response.arrayBuffer();
+//     const mimeType =
+//       response.headers.get('content-type') || 'image/jpeg';
+
+//     const buffer = Buffer.from(arrayBuffer);
+//     return `data:${mimeType};base64,${buffer.toString('base64')}`;
+//   } catch (error) {
+//     console.error(`Error converting image from ${imageUrl}:`, error);
+//     return null;
+//   }
+// }
+
 async function convertImageUrlToBase64(imageUrl) {
   try {
     if (!imageUrl) {
       return null;
     }
 
-    const response = await fetch(imageUrl);
+    const response = await fetch(imageUrl); // Use built-in fetch
     if (!response.ok) {
       throw new Error(
         `Failed to fetch image from ${imageUrl}: ${response.statusText}`
       );
     }
 
-    // Get the image as an array buffer and determine MIME type
     const arrayBuffer = await response.arrayBuffer();
     const mimeType =
       response.headers.get('content-type') || 'image/jpeg';
@@ -580,6 +605,114 @@ async function convertImageUrlToBase64(imageUrl) {
     return null;
   }
 }
+
+// async function askChatGPT(userMessage) {
+//   try {
+//     const image1Base64 = userMessage.image_1
+//       ? await convertImageUrlToBase64(userMessage.image_1)
+//       : null;
+//     const image2Base64 = userMessage.image_2
+//       ? await convertImageUrlToBase64(userMessage.image_2)
+//       : null;
+
+//     if (
+//       !image1Base64 &&
+//       !image2Base64 &&
+//       (userMessage.image_1 || userMessage.image_2)
+//     ) {
+//       throw new Error('Failed to convert provided images to base64');
+//     }
+
+//     const content = [
+//       {
+//         type: 'text',
+//         text: `
+//         Below is 2 IELTS Writing Task 1 and Task 2 with questions and answers. Please rate the 2 essays to get your IELTS Writing score. Then give an overall assessment of each essay, strengths, weaknesses, vocabulary errors, sentence structure errors, and areas for improvement in each essay.
+
+//         Write output under only json format like this form:
+//         {
+//           score: {
+//             writing_task_1_score: ,
+//             writing_task_2_score:
+//           },
+//           [
+//             {
+//               writing_task: 1,
+//               general_assessment: "",
+//               strength: "",
+//               weakness: "",
+//               vocabulary: "",
+//               sentence_structure_error: "",
+//               improvement_sentences: ""
+//             },
+//             {
+//               writing_task: 2,
+//               ...
+//             }
+//           ]
+//         }
+
+//         Here is the questions and answers of 2 IELTS Writing test:
+
+//         IELTS Writing Task 1:
+//         Question: ${userMessage.question_1}
+
+//         ${userMessage.image_1 !== '' ? `Task 1 Image have provided as the first image` : 'Task 1 Image: No image provided'}
+
+//         Answer: ${userMessage.answer_1}
+
+//         IELTS Writing Task 2:
+//         Questions: ${userMessage.question_2}
+
+//         ${userMessage.image_2 !== '' ? `Task 2 Image have provided as the second image` : 'Task 2 Image: No image provided'}
+
+//         Answer: ${userMessage.answer_2}`,
+//       },
+//     ];
+
+//     if (image1Base64) {
+//       content.push({
+//         type: 'image_url',
+//         image_url: {
+//           url: image1Base64,
+//         },
+//       });
+//     }
+//     if (image2Base64) {
+//       content.push({
+//         type: 'image_url',
+//         image_url: {
+//           url: image2Base64,
+//         },
+//       });
+//     }
+
+//     const messages = [
+//       {
+//         role: 'system',
+//         content:
+//           'You are an expert in the field of marking IELTS writing and give advice to improve IELTS writing.',
+//       },
+//       {
+//         role: 'user',
+//         content: content,
+//       },
+//     ];
+
+//     const chatCompletion = await openAIClient.chat.completions.create(
+//       {
+//         model: 'gpt-4o-mini',
+//         messages: messages,
+//         max_tokens: 1000,
+//       }
+//     );
+
+//     return chatCompletion.choices[0].message.content;
+//   } catch (error) {
+//     console.error('Error interacting with ChatGPT API:', error);
+//     throw error;
+//   }
+// }
 
 async function askChatGPT(userMessage) {
   try {
@@ -602,46 +735,7 @@ async function askChatGPT(userMessage) {
       {
         type: 'text',
         text: `
-        Below is 2 IELTS Writing Task 1 and Task 2 with questions and answers. Please rate the 2 essays to get your IELTS Writing score. Then give an overall assessment of each essay, strengths, weaknesses, vocabulary errors, sentence structure errors, and areas for improvement in each essay.
-
-        Write output under only json format like this form:
-        {
-          score: {
-            writing_task_1_score: ,
-            writing_task_2_score:
-          },
-          [
-            {
-              writing_task: 1,
-              general_assessment: "",
-              strength: "",
-              weakness: "",
-              vocabulary: "",
-              sentence_structure_error: "",
-              improvement_sentences: ""
-            },
-            {
-              writing_task: 2,
-              ...
-            }
-          ]
-        }
-
-        Here is the questions and answers of 2 IELTS Writing test:
-
-        IELTS Writing Task 1:
-        Question: ${userMessage.question_1}
-
-        ${userMessage.image_1 !== '' ? `Task 1 Image have provided as the first image` : 'Task 1 Image: No image provided'}
-
-        Answer: ${userMessage.answer_1}
-
-        IELTS Writing Task 2:
-        Questions: ${userMessage.question_2}
-
-        ${userMessage.image_2 !== '' ? `Task 2 Image have provided as the second image` : 'Task 2 Image: No image provided'}
-
-        Answer: ${userMessage.answer_2}`,
+       Did you see these 2 images`,
       },
     ];
 
