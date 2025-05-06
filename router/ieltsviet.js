@@ -109,6 +109,10 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.test.getAllSkillTests
   );
   fastify.get(
+    '/test/writing-answer',
+    ieltsvietController.test.getAllWritingAnswers
+  );
+  fastify.get(
     '/test/skill/:id',
     ieltsvietController.test.getSkillTest
   );
