@@ -132,6 +132,10 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.test.getAllSkillTests
   );
   fastify.get(
+    '/test/writing-answer',
+    ieltsvietController.test.getAllWritingAnswers
+  );
+  fastify.get(
     '/test/skill/:id',
     ieltsvietController.test.getSkillTest
   );
@@ -151,7 +155,10 @@ function ieltsvietRoute(fastify, options, done) {
   );
   fastify.post('/test/submit', ieltsvietController.test.createSubmit);
 
-  fastify.post('/test/ask-chatgpt', ieltsvietController.test.askChatGPT);
+  fastify.post(
+    '/test/ask-chatgpt',
+    ieltsvietController.test.askChatGPT
+  );
 
   done();
 }

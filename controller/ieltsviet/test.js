@@ -104,6 +104,19 @@ async function getTest(request, reply) {
   }
 }
 
+async function getAllWritingAnswers(request, reply) {
+  try {
+    const data = await ieltsvietService.test.getAllWritingAnswer();
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
 async function createTest(request, reply) {
   try {
     const body = request.body;
@@ -303,6 +316,7 @@ module.exports = {
   updateCollection,
   getAllTests,
   getTest,
+  getAllWritingAnswers,
   createTest,
   deleteTest,
   updateTest,

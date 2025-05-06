@@ -149,6 +149,13 @@ async function getAllSkillTests(type) {
   return tests.filter((test) => !test.deleted_at);
 }
 
+async function getAllWritingAnswer() {
+  const completeWriting = await ieltsvietModel.completepart.find({
+    test_type: 'W',
+  });
+  return completeWriting.filter((test) => !test.deleted_at);
+}
+
 async function getPart(id) {
   const part = await ieltsvietModel.testpart.findOne({
     _id: new ObjectId(id),
@@ -442,12 +449,14 @@ async function deleteSkillTest(id) {
 
 async function createSubmit(data) {
   let parts = [];
+  let test_type = '';
   for (const part of data.parts) {
     const testpart = await ieltsvietModel.testpart.findOne({
       _id: new ObjectId(part.part_id),
       deleted_at: { $exists: false },
     });
     if (testpart.type === 'R' || testpart.type === 'L') {
+      test_type = testpart.type;
       let correct_count = 0;
       let incorrect_count = 0;
       let pass_count = 0;
@@ -469,7 +478,6 @@ async function createSubmit(data) {
               )
             ) {
               correct_count++;
-              console.log('correct_count', correct_count);
               is_correct = true;
             } else if (
               user_answer.answer.length === 0 &&
@@ -504,7 +512,8 @@ async function createSubmit(data) {
         pass_count: pass_count,
         is_complete: part.is_complete,
       });
-    } else if (part.type === 'W') {
+    } else if (testpart.type === 'W') {
+      test_type = testpart.type;
       let user_answers = [];
       for (const user_answer of part.user_answers) {
         const question = await ieltsvietModel.question.findOne({
@@ -521,6 +530,7 @@ async function createSubmit(data) {
           }
         }
       }
+
       parts.push({
         type: testpart.type,
         part_id: part.part_id,
@@ -531,6 +541,7 @@ async function createSubmit(data) {
   }
   const data_insert = {
     user_id: data.user_id,
+    test_type: test_type,
     parts: parts,
   };
   const insertedSubmit =
@@ -685,6 +696,7 @@ module.exports = {
   createCollection,
   deleteCollection,
   getAllTests,
+  getAllWritingAnswer,
   getTest,
   updateTest,
   createTest,
