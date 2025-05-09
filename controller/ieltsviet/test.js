@@ -213,6 +213,8 @@ async function deleteSkillTest(request, reply) {
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });
   } catch (err) {
+    console.log('error', err);
+
     reply
       .status(statusCode.internalError)
       .send({ message: failMessage.internalError });
