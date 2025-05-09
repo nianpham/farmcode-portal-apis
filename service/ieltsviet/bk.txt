@@ -1,0 +1,122 @@
+// async function convertImageUrlToBase64(imageUrl) {
+//   try {
+//     if (!imageUrl) {
+//       return null;
+//     }
+
+//     const response = await fetch(imageUrl);
+//     if (!response.ok) {
+//       throw new Error(
+//         `Failed to fetch image from ${imageUrl}: ${response.statusText}`
+//       );
+//     }
+
+//     // Get the image as an array buffer and determine MIME type
+//     const arrayBuffer = await response.arrayBuffer();
+//     const mimeType =
+//       response.headers.get('content-type') || 'image/jpeg';
+
+//     const buffer = Buffer.from(arrayBuffer);
+//     return `data:${mimeType};base64,${buffer.toString('base64')}`;
+//   } catch (error) {
+//     console.error(`Error converting image from ${imageUrl}:`, error);
+//     return null;
+//   }
+// }
+
+
+async function askChatGPT(userMessage) {
+  try {
+    const image1Base64 = userMessage.image_1
+      ? await convertImageUrlToBase64(userMessage.image_1)
+      : null;
+    const image2Base64 = userMessage.image_2
+      ? await convertImageUrlToBase64(userMessage.image_2)
+      : null;
+
+    if (
+      !image1Base64 &&
+      !image2Base64 &&
+      (userMessage.image_1 || userMessage.image_2)
+    ) {
+      throw new Error('Failed to convert provided images to base64');
+    }
+
+    const content = [
+      {
+        type: 'text',
+        text: `
+       Did you see these 2 images? If yes response YES, if not, please response NO.`,
+      },
+    ];
+
+    if (image1Base64) {
+      content.push({
+        type: 'image_url',
+        image_url: {
+          url: image1Base64,
+        },
+      });
+    }
+    if (image2Base64) {
+      content.push({
+        type: 'image_url',
+        image_url: {
+          url: image2Base64,
+        },
+      });
+    }
+
+    const messages = [
+      {
+        role: 'system',
+        content:
+          'You are an expert in the field of marking IELTS writing and give advice to improve IELTS writing.',
+      },
+      {
+        role: 'user',
+        content: content,
+      },
+    ];
+
+    const chatCompletion = await openAIClient.chat.completions.create(
+      {
+        model: 'gpt-4o-mini',
+        messages: messages,
+        max_tokens: 1000,
+      }
+    );
+
+    return chatCompletion.choices[0].message.content;
+  } catch (error) {
+    console.error('Error interacting with ChatGPT API:', error);
+    throw error;
+  }
+}
+
+
+
+
+
+// async function getAllSkillTests(type) {
+//   if (type) {
+//     let skill = '';
+//     switch (type) {
+//       case 'reading':
+//         skill = 'R';
+//         break;
+//       case 'listening':
+//         skill = 'L';
+//         break;
+//       case 'writing':
+//         skill = 'W';
+//         break;
+//     }
+//     var tests = await ieltsvietModel.stest.find({
+//       type: skill,
+//     });
+//   } else {
+//     var tests = await ieltsvietModel.stest.find({});
+//   }
+//   return tests.filter((test) => !test.deleted_at);
+// }
