@@ -48,7 +48,7 @@ async function deleteCollection(id) {
   };
   return ieltsvietModel.testcollection.updateOne(
     { _id: new ObjectId(id) },
-    dataUpdate
+    { $set: dataUpdate }
   );
 }
 
@@ -115,7 +115,7 @@ async function deleteTest(id) {
   };
   return ieltsvietModel.btest.updateOne(
     { _id: new ObjectId(id) },
-    dataUpdate
+    { $set: dataUpdate }
   );
 }
 
@@ -436,7 +436,7 @@ async function deleteSkillTest(id) {
   };
   return ieltsvietModel.stest.updateOne(
     { _id: new ObjectId(id) },
-    dataUpdate
+    { $set: dataUpdate }
   );
 }
 
