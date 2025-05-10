@@ -4,15 +4,14 @@ const crypto = require('crypto');
 
 async function getAllUsers() {
   const users = await ieltsvietModel.user.find({});
-  return users
-    .filter((user) => !user.deleted_at)
+  return users.filter((user) => !user.deleted_at);
 }
 
 async function getUser(id) {
   const user = await ieltsvietModel.user.findOne({
     _id: new ObjectId(id),
   });
-  return user
+  return user;
 }
 
 async function updateUser(id, data) {
@@ -32,7 +31,6 @@ async function loginUser(data) {
     };
   }
   if (user.password === data.password) {
-    
     const user_return = {
       _id: user._id,
       user_name: user.user_name,
@@ -51,9 +49,10 @@ async function loginUser(data) {
 
 async function createUser(data) {
   const data_insert = {
-    user_name : data.user_name,
-    email : data.email,
-    password : data.password,
+    user_name: data.user_name,
+    avatar: data.avatar,
+    email: data.email,
+    password: data.password,
   };
   return await ieltsvietModel.user.insertOne(data_insert);
 }
