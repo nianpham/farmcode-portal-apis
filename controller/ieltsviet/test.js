@@ -170,7 +170,6 @@ async function getAllSkillTests(request, reply) {
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });
   } catch (err) {
-    console.log('error', err);
     reply
       .status(statusCode.internalError)
       .send({ message: failMessage.internalError });
@@ -278,37 +277,6 @@ async function createSubmit(request, reply) {
   }
 }
 
-async function askChatGPT(request, reply) {
-  try {
-    const { users_answers } = request.body;
-    const data =
-      await ieltsvietService.test.askChatGPT(users_answers);
-
-    let parsedData = data;
-    if (typeof data === 'string' && data.startsWith('```json\n')) {
-      const jsonString = data.replace(/```json\n|```/g, '').trim();
-      parsedData = JSON.parse(jsonString);
-    }
-
-    return reply
-      .status(200)
-      .send({ data: parsedData, message: 'Success' });
-  } catch (err) {
-    console.log('error', err);
-
-    if (err.response && err.response.status === 429) {
-      return reply.status(429).send({
-        message:
-          'OpenAI API quota exceeded. Please check your plan and billing details.',
-        error: err.response.data.error,
-      });
-    }
-
-    return reply
-      .status(500) // Internal Server Error
-      .send({ message: 'Internal Server Error' });
-  }
-}
 module.exports = {
   getAllCollections,
   getCollection,
@@ -329,5 +297,4 @@ module.exports = {
   getPart,
   getQuestion,
   createSubmit,
-  askChatGPT,
 };

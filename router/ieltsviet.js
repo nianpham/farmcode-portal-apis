@@ -1,5 +1,4 @@
 const { ieltsvietController } = require('~/controller');
-const fastifyPassport = require('@fastify/passport');
 
 function ieltsvietRoute(fastify, options, done) {
   fastify.get('/slider', ieltsvietController.slider.getAllSliders);
@@ -67,28 +66,6 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.timekeeping.getTimekeeping
   );
 
-  fastify.get(
-    '/auth/login/google',
-    {
-      preValidation: fastifyPassport.authenticate('google', {
-        scope: ['profile', 'email'],
-      }),
-    },
-    async () => {
-      console.log(
-        '>>>>> Redirecting to Google for Authentication <<<<<<'
-      );
-    }
-  );
-  fastify.get(
-    '/auth/login/google/callback',
-    {
-      preValidation: fastifyPassport.authenticate('google', {
-        failureRedirect: process.env.CLIENT_URL,
-      }),
-    },
-    ieltsvietController.auth.loginWithGoogle
-  );
   fastify.post('/user/login', ieltsvietController.user.loginUser);
   fastify.get('/user/', ieltsvietController.user.getAllUsers);
   fastify.get('/user/:id', ieltsvietController.user.getUser);
@@ -154,11 +131,6 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.test.getQuestion
   );
   fastify.post('/test/submit', ieltsvietController.test.createSubmit);
-
-  fastify.post(
-    '/test/ask-chatgpt',
-    ieltsvietController.test.askChatGPT
-  );
 
   done();
 }

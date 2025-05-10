@@ -15,7 +15,7 @@ async function findOne(query) {
 }
 
 async function updateOne(query, data) {
-  return database.ieltsvietBtestCol().updateOne(query, data );
+  return database.ieltsvietBtestCol().updateOne(query, data);
 }
 
 async function findBtestWithPagination(
