@@ -183,7 +183,7 @@ async function getSkillTest(id) {
 async function updateSkillTest(id, data) {
   return ieltsvietModel.stest.updateOne(
     { _id: new ObjectId(id) },
-    data
+    { $set: data }
   );
 }
 
