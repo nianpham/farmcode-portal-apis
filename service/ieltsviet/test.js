@@ -67,7 +67,7 @@ async function getTest(id) {
 async function updateTest(id, data) {
   return ieltsvietModel.btest.updateOne(
     { _id: new ObjectId(id) },
-    data
+    { $set: data }
   );
 }
 
