@@ -537,7 +537,7 @@ async function createSubmit(data) {
     user_email: data.user_email,
     test_id: data.test_id,
     test_type: test_type,
-    parts: parts,
+    result: parts,
   };
   const insertedSubmit =
     await ieltsvietModel.completepart.insertOne(data_insert);
