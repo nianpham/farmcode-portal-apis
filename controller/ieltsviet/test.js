@@ -294,8 +294,11 @@ async function getCompleteTestByUserId(request, reply) {
 
 async function getCompleteTest(request, reply) {
   try {
-    const { id } = request.params;
-    const data = await ieltsvietService.test.getCompleteTest(id);
+    const { id, user_id } = request.params;
+    const data = await ieltsvietService.test.getCompleteTest(
+      id,
+      user_id
+    );
     return reply
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });

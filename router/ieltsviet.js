@@ -138,7 +138,7 @@ function ieltsvietRoute(fastify, options, done) {
   );
 
   fastify.get(
-    '/complete-test/:id',
+    '/complete-test/:id/:user_id',
     ieltsvietController.test.getCompleteTest
   );
 

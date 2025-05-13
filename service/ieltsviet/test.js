@@ -557,9 +557,10 @@ async function getCompleteTestByUserId(id) {
   return test;
 }
 
-async function getCompleteTest(id) {
+async function getCompleteTest(id, user_id) {
   const test = await ieltsvietModel.completepart.findOne({
     test_id: id,
+    user_id: user_id,
   });
   return test;
 }
