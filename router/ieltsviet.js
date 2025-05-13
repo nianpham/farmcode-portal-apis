@@ -133,8 +133,13 @@ function ieltsvietRoute(fastify, options, done) {
   fastify.post('/test/submit', ieltsvietController.test.createSubmit);
 
   fastify.get(
-    '/complete-test/:id',
+    '/complete-user-test/:id',
     ieltsvietController.test.getCompleteTestByUserId
+  );
+
+  fastify.get(
+    '/complete-test/:id',
+    ieltsvietController.test.getCompleteTest
   );
 
   done();

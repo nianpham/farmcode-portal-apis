@@ -557,6 +557,13 @@ async function getCompleteTestByUserId(id) {
   return test;
 }
 
+async function getCompleteTest(id) {
+  const test = await ieltsvietModel.completepart.findOne({
+    test_id: id,
+  });
+  return test;
+}
+
 module.exports = {
   getAllCollections,
   getCollection,
@@ -578,4 +585,5 @@ module.exports = {
   getQuestion,
   createSubmit,
   getCompleteTestByUserId,
+  getCompleteTest,
 };
