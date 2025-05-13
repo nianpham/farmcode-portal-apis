@@ -534,6 +534,8 @@ async function createSubmit(data) {
   }
   const data_insert = {
     user_id: data.user_id,
+    user_email: data.user_email,
+    test_id: data.test_id,
     test_type: test_type,
     parts: parts,
   };
@@ -546,6 +548,13 @@ async function createSubmit(data) {
       result: parts,
     },
   };
+}
+
+async function getCompleteTestByUserId(id) {
+  const test = await ieltsvietModel.completepart.find({
+    user_id: id,
+  });
+  return test;
 }
 
 module.exports = {
@@ -568,4 +577,5 @@ module.exports = {
   getPart,
   getQuestion,
   createSubmit,
+  getCompleteTestByUserId,
 };
