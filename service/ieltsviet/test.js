@@ -193,7 +193,17 @@ async function getQuestion(id) {
 async function getSkillTest(id) {
   const test = await ieltsvietModel.stest.findOne({
     _id: new ObjectId(id),
+    deleted_at: { $exists: false },
   });
+  let totalQuestions = 0;
+  for (const partId of test.parts) {
+    const part = await ieltsvietModel.testpart.findOne({
+      _id: new ObjectId(partId),
+      deleted_at: { $exists: false },
+    });
+    totalQuestions += part.question.length;
+  }
+  test.number_of_questions = totalQuestions;
   return test;
 }
 
