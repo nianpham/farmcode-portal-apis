@@ -47,12 +47,31 @@ async function loginUser(data) {
   };
 }
 
+function generatePassword() {
+  const digits = '0123456789';
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  let password = '';
+
+  for (let i = 0; i < 3; i++) {
+    password += digits[Math.floor(Math.random() * digits.length)];
+  }
+
+  for (let i = 0; i < 3; i++) {
+    password += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return password
+    .split('')
+    .sort(() => Math.random() - 0.5)
+    .join('');
+}
+
 async function createUser(data) {
   const data_insert = {
     user_name: data.user_name,
     avatar: data.avatar,
     email: data.email,
-    password: data.password,
+    password: generatePassword(),
   };
   return await ieltsvietModel.user.insertOne(data_insert);
 }
