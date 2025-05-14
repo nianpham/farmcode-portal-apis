@@ -217,6 +217,7 @@ async function deleteSkillTest(request, reply) {
       .send({ message: failMessage.internalError });
   }
 }
+
 async function updateSkillTest(request, reply) {
   try {
     const { id } = request.params;
