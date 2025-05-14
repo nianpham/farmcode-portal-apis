@@ -119,31 +119,7 @@ async function deleteTest(id) {
   );
 }
 
-// async function getAllSkillTests(type) {
-//   if (type) {
-//     let skill = '';
-//     switch (type) {
-//       case 'reading':
-//         skill = 'R';
-//         break;
-//       case 'listening':
-//         skill = 'L';
-//         break;
-//       case 'writing':
-//         skill = 'W';
-//         break;
-//     }
-//     var tests = await ieltsvietModel.stest.find({
-//       type: skill,
-//     });
-//   } else {
-//     var tests = await ieltsvietModel.stest.find({});
-//   }
-//   return tests.filter((test) => !test.deleted_at);
-// }
-
 async function getAllSkillTests(type) {
-  let tests;
   if (type) {
     let skill = '';
     switch (type) {
@@ -157,37 +133,61 @@ async function getAllSkillTests(type) {
         skill = 'W';
         break;
     }
-    tests = await ieltsvietModel.stest.find({
+    var tests = await ieltsvietModel.stest.find({
       type: skill,
     });
   } else {
-    tests = await ieltsvietModel.stest.find({});
+    var tests = await ieltsvietModel.stest.find({});
   }
-
-  const processedTests = await Promise.all(
-    tests
-      .filter((test) => !test.deleted_at)
-      .map(async (test) => {
-        const testObj = test.toObject ? test.toObject() : { ...test };
-        let totalQuestions = 0;
-
-        for (const partId of testObj.parts) {
-          const part = await ieltsvietModel.testpart.findOne({
-            _id: new ObjectId(partId),
-            deleted_at: { $exists: false },
-          });
-          if (part && part.question) {
-            totalQuestions += part.question.length;
-          }
-        }
-
-        testObj.number_of_questions = totalQuestions;
-        return testObj;
-      })
-  );
-
-  return processedTests;
+  return tests.filter((test) => !test.deleted_at);
 }
+
+// async function getAllSkillTests(type) {
+//   let tests;
+//   if (type) {
+//     let skill = '';
+//     switch (type) {
+//       case 'reading':
+//         skill = 'R';
+//         break;
+//       case 'listening':
+//         skill = 'L';
+//         break;
+//       case 'writing':
+//         skill = 'W';
+//         break;
+//     }
+//     tests = await ieltsvietModel.stest.find({
+//       type: skill,
+//     });
+//   } else {
+//     tests = await ieltsvietModel.stest.find({});
+//   }
+
+//   const processedTests = await Promise.all(
+//     tests
+//       .filter((test) => !test.deleted_at)
+//       .map(async (test) => {
+//         const testObj = test.toObject ? test.toObject() : { ...test };
+//         let totalQuestions = 0;
+
+//         for (const partId of testObj.parts) {
+//           const part = await ieltsvietModel.testpart.findOne({
+//             _id: new ObjectId(partId),
+//             deleted_at: { $exists: false },
+//           });
+//           if (part && part.question) {
+//             totalQuestions += part.question.length;
+//           }
+//         }
+
+//         testObj.number_of_questions = totalQuestions;
+//         return testObj;
+//       })
+//   );
+
+//   return processedTests;
+// }
 
 async function getAllWritingAnswer() {
   const completeWriting = await ieltsvietModel.completepart.find({
