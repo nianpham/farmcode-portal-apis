@@ -222,17 +222,23 @@ async function updateSkillTest(request, reply) {
   try {
     const { id } = request.params;
     const body = request.body;
+    let type = '';
+    if (request.query.type) {
+      type = request.query.type;
+    }
     const data = await ieltsvietService.test.updateSkillTest(
       id,
-      body
+      body,
+      type
     );
     return reply
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });
   } catch (err) {
+    console.log(err);
     reply
       .status(statusCode.internalError)
-      .send({ message: failMessage.internalError });
+      .send({ message: err.message });
   }
 }
 

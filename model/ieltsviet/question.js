@@ -15,7 +15,7 @@ async function findOne(query) {
 }
 
 async function updateOne(query, data) {
-  return database.ieltsvietQuestionCol().updateOne(query, { $set: data });
+  return database.ieltsvietQuestionCol().updateOne(query, data );
 }
 
 async function findQuestionWithPagination(

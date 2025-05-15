@@ -207,11 +207,228 @@ async function getSkillTest(id) {
   return test;
 }
 
-async function updateSkillTest(id, data) {
+async function updateSkillTest(id, data, type) {
+  try{
+    for(const part of data.parts){
+      if (type) {
+      let skill = '';
+      const testpart = await ieltsvietModel.testpart.findOne({
+        _id: new ObjectId(part._id),
+        deleted_at: { $exists: false },
+      });
+      switch (type) {
+        case 'reading':
+          skill = 'R';
+          for(const question of part.question){
+            let question_update;
+            const current_question = await ieltsvietModel.question.findOne({
+              _id: new ObjectId(question._id),
+              deleted_at: { $exists: false },
+            });
+            
+            // If question type has changed, completely replace all fields
+            if (current_question.q_type !== question.q_type) {
+              let updateOperation = {};
+              switch(question.q_type) {
+                case 'MP':
+                  updateOperation = {
+                    $set: {
+                      q_type: 'MP',
+                      question: question.question,
+                      choices: question.choices,
+                      isMultiple: question.isMultiple,
+                      answer: question.answer
+                    }
+                  };
+                  // Remove old FB fields
+                  await ieltsvietModel.question.updateOne(
+                    { _id: new ObjectId(current_question._id) },
+                    { $unset: { image: "", start_passage: "", end_passage: "" } }
+                  );
+                  break;
+                case 'FB':
+                  updateOperation = {
+                    $set: {
+                      q_type: 'FB',
+                      image: question.image,
+                      start_passage: question.start_passage,
+                      end_passage: question.end_passage,
+                      answer: question.answer
+                    }
+                  };
+                  // Remove old MP fields
+                  await ieltsvietModel.question.updateOne(
+                    { _id: new ObjectId(current_question._id) },
+                    { $unset: { question: "", choices: "", isMultiple: "" } }
+                  );
+                  break;
+              }
+              await ieltsvietModel.question.updateOne(
+                { _id: new ObjectId(current_question._id) },
+                updateOperation
+              );
+            } else {
+              // If question type hasn't changed, update only the relevant fields
+              switch(question.q_type) {
+                case 'MP':
+                  question_update = {
+                    question: question.question,
+                    choices: question.choices,
+                    isMultiple: question.isMultiple,
+                    answer: question.answer,
+                  };
+                  break;
+                case 'FB':
+                  question_update = {
+                    image: question.image,
+                    start_passage: question.start_passage,
+                    end_passage: question.end_passage,
+                    answer: question.answer,
+                  };
+                  break;
+              }
+              await ieltsvietModel.question.updateOne(
+                { _id: new ObjectId(current_question._id) },
+                { $set: question_update }
+              );
+            }
+          }
+          const reading_part_update = {
+            image: testpart.image,
+            content: testpart.content,
+            part_num: testpart.part_num,
+          }
+          await ieltsvietModel.testpart.updateOne(
+            { _id: new ObjectId(testpart._id) },
+            { $set: reading_part_update }
+          );  
+          break;
+        case 'listening':
+          skill = 'L';
+          for(const question of part.question){
+            let question_update;
+            const current_question = await ieltsvietModel.question.findOne({
+              _id: new ObjectId(question._id),
+              deleted_at: { $exists: false },
+            });
+            
+            // If question type has changed, completely replace all fields
+            if (current_question.q_type !== question.q_type) {
+              let updateOperation = {};
+              switch(question.q_type) {
+                case 'MP':
+                  updateOperation = {
+                    $set: {
+                      q_type: 'MP',
+                      question: question.question,
+                      choices: question.choices,
+                      isMultiple: question.isMultiple,
+                      answer: question.answer
+                    }
+                  };
+                  // Remove old FB fields
+                  await ieltsvietModel.question.updateOne(
+                    { _id: new ObjectId(current_question._id) },
+                    { $unset: { image: "", start_passage: "", end_passage: "" } }
+                  );
+                  break;
+                case 'FB':
+                  updateOperation = {
+                    $set: {
+                      q_type: 'FB',
+                      image: question.image,
+                      start_passage: question.start_passage,
+                      end_passage: question.end_passage,
+                      answer: question.answer
+                    }
+                  };
+                  // Remove old MP fields
+                  await ieltsvietModel.question.updateOne(
+                    { _id: new ObjectId(current_question._id) },
+                    { $unset: { question: "", choices: "", isMultiple: "" } }
+                  );
+                  break;
+              }
+              await ieltsvietModel.question.updateOne(
+                { _id: new ObjectId(current_question._id) },
+                updateOperation
+              );
+            } else {
+              // If question type hasn't changed, update only the relevant fields
+              switch(question.q_type) {
+                case 'MP':
+                  question_update = {
+                    question: question.question,
+                    choices: question.choices,
+                    isMultiple: question.isMultiple,
+                    answer: question.answer,
+                  };
+                  break;
+                case 'FB':
+                  question_update = {
+                    image: question.image,
+                    start_passage: question.start_passage,
+                    end_passage: question.end_passage,
+                    answer: question.answer,
+                  };
+                  break;
+              }
+              await ieltsvietModel.question.updateOne(
+                { _id: new ObjectId(current_question._id) },
+                { $set: question_update }
+              );
+            }
+          }
+          const listening_part_update = {
+            audio: testpart.audio,
+            part_num: testpart.part_num,
+          }
+          await ieltsvietModel.testpart.updateOne(
+            { _id: new ObjectId(testpart._id) },
+            { $set: listening_part_update }
+          );  
+          break;
+        case 'writing':
+          skill = 'W';
+          for(const question of part.question){
+            let question_update;
+            const current_question = await ieltsvietModel.question.findOne({
+              _id: new ObjectId(question._id),
+              deleted_at: { $exists: false },
+            });
+            question_update = {
+              image: question.image,
+              content: question.topic,
+            }
+            await ieltsvietModel.question.updateOne(
+              { _id: new ObjectId(current_question._id) },
+              { $set: question_update }
+            );
+          }
+          const writing_part_update = {
+            part_num: testpart.part_num,
+          }
+          await ieltsvietModel.testpart.updateOne(
+            { _id: new ObjectId(testpart._id) },
+            { $set: writing_part_update }
+          );
+          break;
+      }
+      
+    }
+  }
+  
   return ieltsvietModel.stest.updateOne(
     { _id: new ObjectId(id) },
-    { $set: data }
+    { $set: {
+      name: data.name,
+      thumbnail: data.thumbnail,
+      time: data.time
+    }}
   );
+  } catch (error) {
+    throw new Error(`Failed to update skill test: ${error.message}`);
+  }
 }
 
 async function createSkillTest(data) {
