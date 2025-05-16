@@ -270,6 +270,20 @@ async function getQuestion(request, reply) {
   }
 }
 
+async function updateSubmit(request, reply) {
+  try {
+    const body = request.body;
+    const data = await ieltsvietService.test.updateSubmit(body);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
 async function createSubmit(request, reply) {
   try {
     const body = request.body;
@@ -336,6 +350,7 @@ module.exports = {
   getPart,
   getQuestion,
   createSubmit,
+  updateSubmit,
   getCompleteTestByUserId,
   getCompleteTest,
 };

@@ -15,7 +15,7 @@ async function findOne(query) {
 }
 
 async function updateOne(query, data) {
-  return database.ieltsvietCompletepartCol().updateOne(query, { $set: data });
+  return database.ieltsvietCompletepartCol().updateOne(query, data );
 }
 
 async function findCompletepartWithPagination(

@@ -130,6 +130,9 @@ function ieltsvietRoute(fastify, options, done) {
     '/test/question/:id',
     ieltsvietController.test.getQuestion
   );
+
+  fastify.put('/test/submit/', ieltsvietController.test.updateSubmit);
+
   fastify.post('/test/submit', ieltsvietController.test.createSubmit);
 
   fastify.get(

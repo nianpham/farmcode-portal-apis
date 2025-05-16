@@ -684,6 +684,119 @@ async function deleteSkillTest(id) {
   );
 }
 
+async function updateSubmit(data) {
+  let parts = [];
+  let test_type = '';
+  for (const part of data.parts) {
+    const testpart = await ieltsvietModel.testpart.findOne({
+      _id: new ObjectId(part.part_id),
+      deleted_at: { $exists: false },
+    });
+    if (testpart.type === 'R' || testpart.type === 'L') {
+      test_type = testpart.type;
+      let correct_count = 0;
+      let incorrect_count = 0;
+      let pass_count = 0;
+      let user_answers = [];
+      for (const user_answer of part.user_answers) {
+        let is_correct = false;
+        let is_incorrect = false;
+        let is_pass = false;
+        const question = await ieltsvietModel.question.findOne({
+          _id: new ObjectId(user_answer.question_id),
+          deleted_at: { $exists: false },
+        });
+        if (question) {
+          if (question.q_type === 'MP' || question.q_type === 'FB') {
+            if (
+              question.answer.length === user_answer.answer.length &&
+              question.answer.every(
+                (val, index) => val === user_answer.answer[index]
+              )
+            ) {
+              correct_count++;
+              is_correct = true;
+            } else if (
+              user_answer.answer.length === 0 &&
+              question.answer.length !== user_answer.answer.length
+            ) {
+              pass_count++;
+              is_pass = true;
+            } else if (
+              user_answer.answer.length !== 0 &&
+              question.answer !== user_answer.answer
+            ) {
+              incorrect_count++;
+              is_incorrect = true;
+            }
+            user_answers.push({
+              question_id: user_answer.question_id,
+              q_type: question.q_type,
+              answer: user_answer.answer,
+              correct_answer: question.answer,
+              is_correct,
+              is_pass,
+            });
+          }
+        }
+      }
+      parts.push({
+        type: testpart.type,
+        part_id: part.part_id,
+        user_answers: user_answers,
+        correct_count: correct_count,
+        incorrect_count: incorrect_count,
+        pass_count: pass_count,
+        is_complete: part.is_complete,
+      });
+    } else if (testpart.type === 'W') {
+      test_type = testpart.type;
+      let user_answers = [];
+      for (const user_answer of part.user_answers) {
+        const question = await ieltsvietModel.question.findOne({
+          _id: new ObjectId(user_answer.question_id),
+          deleted_at: { $exists: false },
+        });
+        if (question) {
+          if (question.q_type === 'W') {
+            user_answers.push({
+              question_id: user_answer.question_id,
+              answer: user_answer.answer,
+              topic: question.content,
+            });
+          }
+        }
+      }
+
+      parts.push({
+        type: testpart.type,
+        part_id: part.part_id,
+        user_answers: user_answers,
+        is_complete: part.is_complete,
+      });
+    }
+  }
+  const data_insert = {
+    user_id: data.user_id,
+    user_email: data.user_email,
+    test_id: data.test_id,
+    test_type: test_type,
+    result: parts,
+  };
+  const insertedSubmit =
+    await ieltsvietModel.completepart.updateOne(
+      { user_id: data.user_id, test_id: data.test_id, deleted_at: { $exists: false } },
+      { $set: data_insert }
+    );
+  return {
+    message: 'Update submit successfully',
+    data: {
+      submit_id: insertedSubmit.insertedId,
+      result: parts,
+    },
+  };
+}
+
 async function createSubmit(data) {
   let parts = [];
   let test_type = '';
@@ -828,6 +941,7 @@ module.exports = {
   deleteSkillTest,
   getPart,
   getQuestion,
+  updateSubmit,
   createSubmit,
   getCompleteTestByUserId,
   getCompleteTest,
