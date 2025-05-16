@@ -468,7 +468,7 @@ async function createSkillTest(data) {
           type: 'R',
           parts: [],
           name: data.name,
-          thumbnail: data.thumbnail,
+          thumbnail: data.thumbnail || '',
           time: data.time,
         };
         const stest =
@@ -544,7 +544,7 @@ async function createSkillTest(data) {
           type: 'L',
           parts: [],
           name: data.name,
-          thumbnail: data.thumbnail,
+          thumbnail: data.thumbnail || '',
           time: data.time,
         };
         const stest_l =
@@ -811,11 +811,14 @@ async function updateSubmit(data) {
     test_type: test_type,
     result: parts,
   };
-  const insertedSubmit =
-    await ieltsvietModel.completepart.updateOne(
-      { user_id: data.user_id, test_id: data.test_id, deleted_at: { $exists: false } },
-      { $set: data_insert }
-    );
+  const insertedSubmit = await ieltsvietModel.completepart.updateOne(
+    {
+      user_id: data.user_id,
+      test_id: data.test_id,
+      deleted_at: { $exists: false },
+    },
+    { $set: data_insert }
+  );
   return {
     message: 'Update submit successfully',
     data: {
