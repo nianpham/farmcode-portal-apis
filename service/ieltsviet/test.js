@@ -619,7 +619,7 @@ async function createSkillTest(data) {
           type: 'W',
           parts: [],
           name: data.name,
-          thumbnail: data.thumbnail,
+          thumbnail: data.thumbnail || '',
           time: data.time,
         };
         const stest_w =
