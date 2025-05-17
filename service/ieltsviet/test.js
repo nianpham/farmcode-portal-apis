@@ -424,7 +424,7 @@ async function updateSkillTest(id, data, type) {
                   deleted_at: { $exists: false },
                 });
               question_update = {
-                image: question.image,
+                image: question.image || '',
                 content: question.topic,
               };
               await ieltsvietModel.question.updateOne(
@@ -449,7 +449,7 @@ async function updateSkillTest(id, data, type) {
       {
         $set: {
           name: data.name,
-          thumbnail: data.thumbnail,
+          thumbnail: data.thumbnail || '',
           time: data.time,
         },
       }
@@ -593,7 +593,7 @@ async function createSkillTest(data) {
                 question_insert_l = {
                   q_type: 'W',
                   part_id: insertedPart.insertedId,
-                  image: question.image,
+                  image: question.image || '',
                   content: question.topic,
                 };
                 break;
@@ -791,6 +791,7 @@ async function updateSubmit(data) {
               question_id: user_answer.question_id,
               answer: user_answer.answer,
               topic: question.content,
+              image: question.image || '',
             });
           }
         }
@@ -907,6 +908,7 @@ async function createSubmit(data) {
               question_id: user_answer.question_id,
               answer: user_answer.answer,
               topic: question.content,
+              image: question.image || '',
             });
           }
         }
