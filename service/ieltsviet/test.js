@@ -314,10 +314,13 @@ async function updateSkillTest(id, data, type) {
               }
             }
             const reading_part_update = {
-              image: testpart.image,
-              content: testpart.content,
-              part_num: testpart.part_num,
+              image: part.image || testpart.image || '', // Use new data if provided, fallback to existing
+              content: part.content || testpart.content || '', // Use new data if provided, fallback to existing
+              part_num: part.part_num || testpart.part_num || 0, // Use new data if provided, fallback to existing
             };
+
+            console.log('reading_part_update', reading_part_update);
+
             await ieltsvietModel.testpart.updateOne(
               { _id: new ObjectId(testpart._id) },
               { $set: reading_part_update }
