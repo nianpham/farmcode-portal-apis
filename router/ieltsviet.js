@@ -112,6 +112,12 @@ function ieltsvietRoute(fastify, options, done) {
     '/test/writing-answer',
     ieltsvietController.test.getAllWritingAnswers
   );
+
+  fastify.get(
+    '/test/user-answer/:id',
+    ieltsvietController.test.getAllUserAnswers
+  );
+
   fastify.get(
     '/test/skill/:id',
     ieltsvietController.test.getSkillTest

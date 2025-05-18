@@ -166,6 +166,13 @@ async function getAllWritingAnswer() {
   return completeWriting.filter((test) => !test.deleted_at);
 }
 
+async function getAllAnswerByUserId(userId) {
+  const completeWriting = await ieltsvietModel.completepart.find({
+    user_id: userId,
+  });
+  return completeWriting.filter((test) => !test.deleted_at);
+}
+
 async function getPart(id) {
   const part = await ieltsvietModel.testpart.findOne({
     _id: new ObjectId(id),
@@ -994,4 +1001,5 @@ module.exports = {
   createSubmit,
   getCompleteTestByUserId,
   getCompleteTest,
+  getAllAnswerByUserId,
 };

@@ -117,6 +117,20 @@ async function getAllWritingAnswers(request, reply) {
   }
 }
 
+async function getAllUserAnswers(request, reply) {
+  try {
+    const { id } = request.params;
+    const data = await ieltsvietService.test.getAllAnswerByUserId(id);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
 async function createTest(request, reply) {
   try {
     const body = request.body;
@@ -353,4 +367,5 @@ module.exports = {
   updateSubmit,
   getCompleteTestByUserId,
   getCompleteTest,
+  getAllUserAnswers,
 };
