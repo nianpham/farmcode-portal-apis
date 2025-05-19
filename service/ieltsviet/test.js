@@ -65,9 +65,27 @@ async function getTest(id) {
 }
 
 async function updateTest(id, data) {
+  for (const test of data.tests) {
+    switch (test.skill) {
+      case 'R':
+        const result_r = await updateSkillTest(test._id, test, test.skill);
+        break;
+      case 'L':
+        const result_l = await updateSkillTest(test._id, test, test.skill);
+        break;
+      case 'W':
+        const result_w = await updateSkillTest(test._id, test, test.skill);
+        break;
+    }
+  }
+  const data_update = {
+    name: data.name,
+    thumbnail: data.thumbnail,
+    description: data.description,
+  };
   return ieltsvietModel.btest.updateOne(
     { _id: new ObjectId(id) },
-    { $set: data }
+    { $set: data_update }
   );
 }
 
