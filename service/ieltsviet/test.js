@@ -110,13 +110,46 @@ async function createTest(data) {
 }
 
 async function deleteTest(id) {
-  const dataUpdate = {
-    deleted_at: new Date(),
-  };
-  return ieltsvietModel.btest.updateOne(
-    { _id: new ObjectId(id) },
-    { $set: dataUpdate }
-  );
+  // const dataUpdate = {
+  //   deleted_at: new Date(),
+  // };
+  // return ieltsvietModel.btest.updateOne(
+  //   { _id: new ObjectId(id) },
+  //   { $set: dataUpdate }
+  // );
+
+  try {
+    const test = await ieltsvietModel.btest.findOne({
+      _id: new ObjectId(id),
+    });
+    if (!test) {
+      throw new Error('Test not found');
+    }
+
+    const dataUpdate = {
+      deleted_at: new Date(),
+    };
+
+    const btestUpdate = await ieltsvietModel.btest.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: dataUpdate }
+    );
+
+    const skillTestIds = [test.r_id, test.l_id, test.w_id].filter(
+      (id) => id
+    );
+    const skillTestUpdates = await Promise.all(
+      skillTestIds.map((skillId) => deleteSkillTest(skillId))
+    );
+
+    return {
+      btestUpdate,
+      skillTestUpdates,
+    };
+  } catch (error) {
+    console.error('Error deleting test:', error);
+    throw error;
+  }
 }
 
 async function getAllSkillTests(type) {
