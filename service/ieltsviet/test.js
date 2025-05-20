@@ -68,13 +68,25 @@ async function updateTest(id, data) {
   for (const test of data.tests) {
     switch (test.skill) {
       case 'R':
-        const result_r = await updateSkillTest(test._id, test, test.skill);
+        const result_r = await updateSkillTest(
+          test._id,
+          test,
+          'reading'
+        );
         break;
       case 'L':
-        const result_l = await updateSkillTest(test._id, test, test.skill);
+        const result_l = await updateSkillTest(
+          test._id,
+          test,
+          'listening'
+        );
         break;
       case 'W':
-        const result_w = await updateSkillTest(test._id, test, test.skill);
+        const result_w = await updateSkillTest(
+          test._id,
+          test,
+          'writing'
+        );
         break;
     }
   }
