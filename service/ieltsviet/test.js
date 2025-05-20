@@ -1014,6 +1014,7 @@ async function createSubmit(data) {
     user_avatar: user !== '' ? user.avatar : user,
     user_name: user !== '' ? user.user_name : user,
     test_name: test_name ? test_name.name : '',
+    test_image: test_name ? test_name.thumbnail : '',
   };
 
   const insertedSubmit =
