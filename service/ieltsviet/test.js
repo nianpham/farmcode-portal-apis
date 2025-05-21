@@ -2,6 +2,10 @@ const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 const { log } = require('console');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const path = require('path');
+const { text } = require('stream/consumers');
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
@@ -1043,7 +1047,47 @@ async function getCompleteTest(id, user_id) {
   return test;
 }
 
+function transporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // TRUE for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+}
+
+function mailOptions() {
+  return {
+    from: {
+      name: 'IELTS Viet',
+      address: process.env.EMAIL_USER,
+    },
+    to: ['hieunc@farmcode.io.vn'],
+    subject: 'Send email successfully',
+    text: 'Send email successfully',
+    html: '<h1>Send email successfully haha qua da</h1>',
+    attachments: [
+      {
+        filename: 'test.pdf',
+        path: path.join(__dirname, 'test.pdf'),
+        contentType: 'application/pdf',
+      },
+      {
+        filename: 'sample.jpg',
+        path: path.join(__dirname, 'sample.jpg'),
+        contentType: 'image/jpeg',
+      },
+    ],
+  };
+}
+
 module.exports = {
+  transporter,
+  mailOptions,
   getAllCollections,
   getCollection,
   updateCollection,
