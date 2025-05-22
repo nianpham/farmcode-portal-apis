@@ -117,6 +117,20 @@ async function getAllWritingAnswers(request, reply) {
   }
 }
 
+async function getAllUserAnswers(request, reply) {
+  try {
+    const { id } = request.params;
+    const data = await ieltsvietService.test.getAllAnswerByUserId(id);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
 async function createTest(request, reply) {
   try {
     const body = request.body;
@@ -217,21 +231,28 @@ async function deleteSkillTest(request, reply) {
       .send({ message: failMessage.internalError });
   }
 }
+
 async function updateSkillTest(request, reply) {
   try {
     const { id } = request.params;
     const body = request.body;
+    let type = '';
+    if (request.query.type) {
+      type = request.query.type;
+    }
     const data = await ieltsvietService.test.updateSkillTest(
       id,
-      body
+      body,
+      type
     );
     return reply
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });
   } catch (err) {
+    console.log(err);
     reply
       .status(statusCode.internalError)
-      .send({ message: failMessage.internalError });
+      .send({ message: err.message });
   }
 }
 
@@ -263,10 +284,56 @@ async function getQuestion(request, reply) {
   }
 }
 
+async function updateSubmit(request, reply) {
+  try {
+    const body = request.body;
+    const data = await ieltsvietService.test.updateSubmit(body);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
 async function createSubmit(request, reply) {
   try {
     const body = request.body;
     const data = await ieltsvietService.test.createSubmit(body);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
+async function getCompleteTestByUserId(request, reply) {
+  try {
+    const { id } = request.params;
+    const data =
+      await ieltsvietService.test.getCompleteTestByUserId(id);
+    return reply
+      .status(statusCode.success)
+      .send({ data: data, message: successMessage.index });
+  } catch (err) {
+    reply
+      .status(statusCode.internalError)
+      .send({ message: failMessage.internalError });
+  }
+}
+
+async function getCompleteTest(request, reply) {
+  try {
+    const { id, user_id } = request.params;
+    const data = await ieltsvietService.test.getCompleteTest(
+      id,
+      user_id
+    );
     return reply
       .status(statusCode.success)
       .send({ data: data, message: successMessage.index });
@@ -297,4 +364,8 @@ module.exports = {
   getPart,
   getQuestion,
   createSubmit,
+  updateSubmit,
+  getCompleteTestByUserId,
+  getCompleteTest,
+  getAllUserAnswers,
 };

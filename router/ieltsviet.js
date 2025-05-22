@@ -112,6 +112,12 @@ function ieltsvietRoute(fastify, options, done) {
     '/test/writing-answer',
     ieltsvietController.test.getAllWritingAnswers
   );
+
+  fastify.get(
+    '/test/user-answer/:id',
+    ieltsvietController.test.getAllUserAnswers
+  );
+
   fastify.get(
     '/test/skill/:id',
     ieltsvietController.test.getSkillTest
@@ -130,7 +136,20 @@ function ieltsvietRoute(fastify, options, done) {
     '/test/question/:id',
     ieltsvietController.test.getQuestion
   );
+
+  fastify.put('/test/submit/', ieltsvietController.test.updateSubmit);
+
   fastify.post('/test/submit', ieltsvietController.test.createSubmit);
+
+  fastify.get(
+    '/complete-user-test/:id',
+    ieltsvietController.test.getCompleteTestByUserId
+  );
+
+  fastify.get(
+    '/complete-test/:id/:user_id',
+    ieltsvietController.test.getCompleteTest
+  );
 
   done();
 }

@@ -62,17 +62,22 @@ async function connection(cb) {
     _ieltsvietReviewCol = db.collection('ieltsviet_reviews');
     _ieltsvietBlogCol = db.collection('ieltsviet_blogs');
     _ieltsvietAccountCol = db.collection('ieltsviet_accounts');
-    _ieltsvietTimekeepingCol = db.collection('ieltsviet_timekeepings');
+    _ieltsvietTimekeepingCol = db.collection(
+      'ieltsviet_timekeepings'
+    );
     _ieltsvietAuthorCol = db.collection('ieltsviet_authors');
     _ieltsvietUserCol = db.collection('ieltsviet_users');
     _ieltsvietBtestCol = db.collection('ieltsviet_btests');
     _ieltsvietStestCol = db.collection('ieltsviet_stests');
     _ieltsvietTestpartCol = db.collection('ieltsviet_testparts');
     _ieltsvietQuestionCol = db.collection('ieltsviet_questions');
-    _ieltsvietCompletepartCol = db.collection('ieltsviet_completeparts');
-    _ieltsvietTestcollectionCol = db.collection('ieltsviet_testcollections');
+    _ieltsvietCompletepartCol = db.collection(
+      'ieltsviet_completeparts'
+    );
+    _ieltsvietTestcollectionCol = db.collection(
+      'ieltsviet_testcollections'
+    );
     _helperAddressCol = db.collection('helper_address');
-
 
     await marketWarehouse.createIndex({
       created_at: 1,
@@ -112,8 +117,6 @@ const ieltsvietQuestionCol = () => _ieltsvietQuestionCol;
 const ieltsvietCompletepartCol = () => _ieltsvietCompletepartCol;
 const ieltsvietTestcollectionCol = () => _ieltsvietTestcollectionCol;
 
-
-
 module.exports = {
   connection,
   ecokaProductCol,
@@ -140,5 +143,4 @@ module.exports = {
   ieltsvietCompletepartCol,
   ieltsvietTestcollectionCol,
   helperAddressCol,
-
 };
