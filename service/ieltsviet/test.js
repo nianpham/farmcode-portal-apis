@@ -2,10 +2,6 @@ const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 const { log } = require('console');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
-const path = require('path');
-const { text } = require('stream/consumers');
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
@@ -1047,78 +1043,7 @@ async function getCompleteTest(id, user_id) {
   return test;
 }
 
-function transporter() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // TRUE for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-}
-
-function mailOptions(data) {
-  return {
-    from: {
-      name: 'IELTS Viet',
-      address: process.env.EMAIL_USER,
-    },
-    to: ['hieunc@farmcode.io.vn'],
-    subject: 'Feedback IELTS Viet Writing Test',
-    text: 'Feedback IELTS Viet Writing Test for: ' + '<ten bai test>',
-    html: ` 
-          <h3>Writing task 1 score: <strong>5.5</strong></h3>
-          <p>
-            Teacher's feedback:
-            <span style="font-style: italic; font-weight: bold"
-              >Trương Hoàng Hậu</span
-            >
-          </p>
-          <p>...html...</p>
-          <p>
-            ---------------------------------------------------------------------------------------------
-          </p>
-          <h3>Writing task 2 score: <strong>7.5</strong></h3>
-          <p>
-            Teacher's feedback:
-            <span style="font-style: italic; font-weight: bold"
-              >Trương Hoàng Hậu</span
-            >
-          </p>
-          <p>...html...</p>
-          <p>
-            ---------------------------------------------------------------------------------------------
-          </p>
-          <h1>Writing Overall: 6.0</h1>
-          `,
-    attachments: [
-      {
-        filename: 'test.pdf',
-        path: path.join(__dirname, 'test.pdf'),
-        contentType: 'application/pdf',
-      },
-      {
-        filename: 'sample.jpg',
-        path: path.join(__dirname, 'sample.jpg'),
-        contentType: 'image/jpeg',
-      },
-    ],
-  };
-}
-
-async function createFeedback(data) {
-  const data_insert = {
-    ...data,
-  };
-  return await ieltsvietModel.feedback.insertOne(data_insert);
-}
-
 module.exports = {
-  transporter,
-  mailOptions,
   getAllCollections,
   getCollection,
   updateCollection,
@@ -1142,5 +1067,4 @@ module.exports = {
   getCompleteTestByUserId,
   getCompleteTest,
   getAllAnswerByUserId,
-  createFeedback,
 };

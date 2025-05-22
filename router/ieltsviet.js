@@ -178,8 +178,6 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.test.getCompleteTest
   );
 
-  fastify.get('/send-email', ieltsvietController.test.sendEmail);
-
   done();
 }
 

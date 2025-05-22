@@ -344,33 +344,7 @@ async function getCompleteTest(request, reply) {
   }
 }
 
-async function sendEmail(request, reply) {
-  try {
-    console.log('==============Sending email...==============');
-
-    const data = request.body;
-
-    const transporter = ieltsvietService.test.transporter();
-    const mailOptions = ieltsvietService.test.mailOptions(data);
-
-    await ieltsvietService.test.createFeedback(data);
-
-    const info = await transporter.sendMail(mailOptions);
-
-    return reply.status(statusCode.success).send({
-      message: 'Email sent successfully',
-      data: info.response,
-    });
-  } catch (error) {
-    console.error('Error sending email:', error);
-    reply
-      .status(statusCode.internalError)
-      .send({ message: error.message || failMessage.internalError });
-  }
-}
-
 module.exports = {
-  sendEmail,
   getAllCollections,
   getCollection,
   createCollection,
