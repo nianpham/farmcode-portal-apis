@@ -71,6 +71,7 @@ async function createUser(data) {
     user_name: data.user_name,
     avatar: data.avatar,
     email: data.email,
+    isStudent: true,
     password: generatePassword(),
   };
   return await ieltsvietModel.user.insertOne(data_insert);
