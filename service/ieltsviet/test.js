@@ -1114,6 +1114,13 @@ function mailOptions(data) {
   };
 }
 
+async function createFeedback(data) {
+  const data_insert = {
+    ...data,
+  };
+  return await ieltsvietModel.feedback.insertOne(data_insert);
+}
+
 module.exports = {
   transporter,
   mailOptions,
@@ -1140,4 +1147,5 @@ module.exports = {
   getCompleteTestByUserId,
   getCompleteTest,
   getAllAnswerByUserId,
+  createFeedback,
 };

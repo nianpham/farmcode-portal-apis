@@ -350,13 +350,12 @@ async function sendEmail(request, reply) {
 
     const data = request.body;
 
-    console.log('Data:', data);
-
     const transporter = ieltsvietService.test.transporter();
     const mailOptions = ieltsvietService.test.mailOptions(data);
 
+    await ieltsvietService.test.createFeedback(data);
+
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent: ' + info.response);
 
     return reply.status(statusCode.success).send({
       message: 'Email sent successfully',
