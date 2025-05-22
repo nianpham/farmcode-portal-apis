@@ -1066,44 +1066,49 @@ function mailOptions(data) {
       name: 'IELTS Viet',
       address: process.env.EMAIL_USER,
     },
-    to: ['hieunc@farmcode.io.vn'],
+    to: [`${data.user_email}`],
     subject: 'Feedback IELTS Viet Writing Test',
-    text: 'Feedback IELTS Viet Writing Test for: ' + '<ten bai test>',
+    text:
+      'Feedback IELTS Viet Writing Test for: ' + `${data.test_name}`,
     html: ` 
-          <h3>Writing task 1 score: <strong>5.5</strong></h3>
-          <p>
+          <h1 style="color: black;">${data.test_name}</h1>
+          <h3 style="color: black;">Writing task 1 score: <strong>${data.writing_feedback[0].score}</strong></h3>
+          <p style="color: black;">
             Teacher's feedback:
-            <span style="font-style: italic; font-weight: bold"
-              >Trương Hoàng Hậu</span
+            <span style="font-style: italic; font-weight: bold; color: black;"
+              >${data.writing_feedback[0].teacher}</span
             >
           </p>
-          <p>...html...</p>
-          <p>
+          <p style="color: black;">${data.writing_feedback[0].feedback}</p>
+          <p style="color: black;">
             ---------------------------------------------------------------------------------------------
           </p>
-          <h3>Writing task 2 score: <strong>7.5</strong></h3>
-          <p>
+          <h3 style="color: black;">Writing task 2 score: <strong>${data.writing_feedback[1].score}</strong></h3>
+          <p style="color: black;">
             Teacher's feedback:
-            <span style="font-style: italic; font-weight: bold"
-              >Trương Hoàng Hậu</span
+            <span style="font-style: italic; font-weight: bold; color: black;"
+              >${data.writing_feedback[1].teacher}</span
             >
           </p>
-          <p>...html...</p>
-          <p>
+          <p style="color: black;">${data.writing_feedback[1].feedback}</p>
+          <p style="color: black;">
             ---------------------------------------------------------------------------------------------
           </p>
-          <h1>Writing Overall: 6.0</h1>
+          <h1 style="color: black;">Writing Overall: ${((parseFloat(data.writing_feedback[0].score) + parseFloat(data.writing_feedback[1].score)) / 2).toFixed(1)}</h1>
           `,
     attachments: [
+      // {
+      //   filename: 'test.pdf',
+      //   path: path.join(__dirname, 'test.pdf'),
+      //   contentType: 'application/pdf',
+      // },
       {
-        filename: 'test.pdf',
-        path: path.join(__dirname, 'test.pdf'),
-        contentType: 'application/pdf',
-      },
-      {
-        filename: 'sample.jpg',
-        path: path.join(__dirname, 'sample.jpg'),
-        contentType: 'image/jpeg',
+        filename: 'logo-ielts-viet.png',
+        path: path.join(
+          __dirname,
+          '/attachments/logo-ielts-viet.png'
+        ),
+        contentType: 'image/png',
       },
     ],
   };
