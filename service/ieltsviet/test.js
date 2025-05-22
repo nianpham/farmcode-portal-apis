@@ -1060,16 +1060,40 @@ function transporter() {
   });
 }
 
-function mailOptions() {
+function mailOptions(data) {
   return {
     from: {
       name: 'IELTS Viet',
       address: process.env.EMAIL_USER,
     },
     to: ['hieunc@farmcode.io.vn'],
-    subject: 'Send email successfully',
-    text: 'Send email successfully',
-    html: '<h1>Send email successfully haha qua da</h1>',
+    subject: 'Feedback IELTS Viet Writing Test',
+    text: 'Feedback IELTS Viet Writing Test for: ' + '<ten bai test>',
+    html: ` 
+          <h3>Writing task 1 score: <strong>5.5</strong></h3>
+          <p>
+            Teacher's feedback:
+            <span style="font-style: italic; font-weight: bold"
+              >Trương Hoàng Hậu</span
+            >
+          </p>
+          <p>...html...</p>
+          <p>
+            ---------------------------------------------------------------------------------------------
+          </p>
+          <h3>Writing task 2 score: <strong>7.5</strong></h3>
+          <p>
+            Teacher's feedback:
+            <span style="font-style: italic; font-weight: bold"
+              >Trương Hoàng Hậu</span
+            >
+          </p>
+          <p>...html...</p>
+          <p>
+            ---------------------------------------------------------------------------------------------
+          </p>
+          <h1>Writing Overall: 6.0</h1>
+          `,
     attachments: [
       {
         filename: 'test.pdf',
