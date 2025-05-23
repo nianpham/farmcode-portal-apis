@@ -36,6 +36,7 @@ let _ieltsvietTestpartCol = null;
 let _ieltsvietQuestionCol = null;
 let _ieltsvietCompletepartCol = null;
 let _ieltsvietTestcollectionCol = null;
+let _ieltsvietFeedbackCol = null;
 
 async function connection(cb) {
   if (db) {
@@ -77,6 +78,7 @@ async function connection(cb) {
     _ieltsvietTestcollectionCol = db.collection(
       'ieltsviet_testcollections'
     );
+    _ieltsvietFeedbackCol = db.collection('ieltsviet_feedback');
     _helperAddressCol = db.collection('helper_address');
 
     await marketWarehouse.createIndex({
@@ -116,6 +118,7 @@ const ieltsvietTestpartCol = () => _ieltsvietTestpartCol;
 const ieltsvietQuestionCol = () => _ieltsvietQuestionCol;
 const ieltsvietCompletepartCol = () => _ieltsvietCompletepartCol;
 const ieltsvietTestcollectionCol = () => _ieltsvietTestcollectionCol;
+const ieltsvietFeedbackCol = () => _ieltsvietFeedbackCol;
 
 module.exports = {
   connection,
@@ -142,5 +145,6 @@ module.exports = {
   ieltsvietQuestionCol,
   ieltsvietCompletepartCol,
   ieltsvietTestcollectionCol,
+  ieltsvietFeedbackCol,
   helperAddressCol,
 };

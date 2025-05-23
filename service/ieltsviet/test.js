@@ -2,6 +2,10 @@ const { ieltsvietModel } = require('~/model');
 const { ObjectId } = require('mongodb');
 const crypto = require('crypto');
 const { log } = require('console');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const path = require('path');
+const { text } = require('stream/consumers');
 
 async function getAllCollections() {
   const collections = await ieltsvietModel.testcollection.find({});
@@ -1110,7 +1114,16 @@ function mailOptions(data) {
   };
 }
 
+async function createFeedback(data) {
+  const data_insert = {
+    ...data,
+  };
+  return await ieltsvietModel.feedback.insertOne(data_insert);
+}
+
 module.exports = {
+  transporter,
+  mailOptions,
   getAllCollections,
   getCollection,
   updateCollection,
@@ -1134,4 +1147,5 @@ module.exports = {
   getCompleteTestByUserId,
   getCompleteTest,
   getAllAnswerByUserId,
+  createFeedback,
 };
