@@ -1061,6 +1061,12 @@ function transporter() {
 }
 
 function mailOptions(data) {
+  const task1Score = parseFloat(data.writing_feedback[0].score);
+  const task2Score = parseFloat(data.writing_feedback[1].score);
+  const rawOverallScore = (task1Score + task2Score * 2) / 3;
+
+  const overallScore = Math.round(rawOverallScore * 2) / 2;
+
   return {
     from: {
       name: 'IELTS Viet',
@@ -1094,7 +1100,7 @@ function mailOptions(data) {
           <p style="color: black;">
             ---------------------------------------------------------------------------------------------
           </p>
-          <h1 style="color: black;">Writing Overall: ${((parseFloat(data.writing_feedback[0].score) + parseFloat(data.writing_feedback[1].score)) / 2).toFixed(1)}</h1>
+          <h1 style="color: black;">Writing Overall: ${overallScore.toFixed(1)}</h1>
           `,
     // attachments: [
     //   // {
