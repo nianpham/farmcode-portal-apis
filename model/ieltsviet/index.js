@@ -2,6 +2,7 @@ module.exports = {
   slider: require('~/model/ieltsviet/slider'),
   review: require('~/model/ieltsviet/review'),
   blog: require('~/model/ieltsviet/blog'),
+  feedback: require('~/model/ieltsviet/feedback'),
   account: require('~/model/ieltsviet/account'),
   timekeeping: require('~/model/ieltsviet/timekeeping'),
   author: require('~/model/ieltsviet/author'),
