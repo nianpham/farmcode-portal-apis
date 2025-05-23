@@ -1096,21 +1096,21 @@ function mailOptions(data) {
           </p>
           <h1 style="color: black;">Writing Overall: ${((parseFloat(data.writing_feedback[0].score) + parseFloat(data.writing_feedback[1].score)) / 2).toFixed(1)}</h1>
           `,
-    attachments: [
-      // {
-      //   filename: 'test.pdf',
-      //   path: path.join(__dirname, 'test.pdf'),
-      //   contentType: 'application/pdf',
-      // },
-      {
-        filename: 'logo-ielts-viet.png',
-        path: path.join(
-          __dirname,
-          '/attachments/logo-ielts-viet.png'
-        ),
-        contentType: 'image/png',
-      },
-    ],
+    // attachments: [
+    //   // {
+    //   //   filename: 'test.pdf',
+    //   //   path: path.join(__dirname, 'test.pdf'),
+    //   //   contentType: 'application/pdf',
+    //   // },
+    //   {
+    //     filename: 'logo-ielts-viet.png',
+    //     path: path.join(
+    //       __dirname,
+    //       '/attachments/logo-ielts-viet.png'
+    //     ),
+    //     contentType: 'image/png',
+    //   },
+    // ],
   };
 }
 
