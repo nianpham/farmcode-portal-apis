@@ -14,10 +14,6 @@ async function getUser(id) {
   return user;
 }
 
-async function getUserByEmail(data) {
-  return ieltsvietModel.user.findOne({ email: data.email });
-}
-
 async function updateUser(id, data) {
   return ieltsvietModel.user.updateOne(
     { _id: new ObjectId(id) },
@@ -81,17 +77,6 @@ async function createUser(data) {
   return await ieltsvietModel.user.insertOne(data_insert);
 }
 
-async function createUserGG(data) {
-  const data_insert = {
-    user_name: data.name,
-    avatar: data.avatar,
-    email: data.email,
-    isStudent: false,
-    password: generatePassword(),
-  };
-  return await ieltsvietModel.user.insertOne(data_insert);
-}
-
 async function deleteUser(id) {
   const dataUpdate = {
     deleted_at: new Date(),
@@ -102,32 +87,11 @@ async function deleteUser(id) {
   );
 }
 
-async function changePassword(id, data) {
-  const oldPassword = data.oldPassword;
-  const newPassword = data.newPassword;
-  const account = await ieltsvietModel.user.findOne({
-    _id: new ObjectId(id),
-  });
-  if (!account) {
-    return { message: 'Tài khoản không tồn tại' };
-  }
-  if (account.password !== oldPassword) {
-    return { message: 'Mật khẩu cũ không đúng' };
-  }
-  return ieltsvietModel.user.updateOne(
-    { _id: new ObjectId(id) },
-    { password: newPassword }
-  );
-}
-
 module.exports = {
   getAllUsers,
   getUser,
-  getUserByEmail,
   updateUser,
   loginUser,
   createUser,
   deleteUser,
-  createUserGG,
-  changePassword,
 };

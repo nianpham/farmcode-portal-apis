@@ -7,5 +7,4 @@ module.exports = {
   author: require('~/controller/ieltsviet/author'),
   user: require('~/controller/ieltsviet/user'),
   test: require('~/controller/ieltsviet/test'),
-  auth: require('~/controller/ieltsviet/auth'),
 };

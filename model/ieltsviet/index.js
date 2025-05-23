@@ -12,5 +12,4 @@ module.exports = {
   question: require('~/model/ieltsviet/question'),
   completepart: require('~/model/ieltsviet/completepart'),
   testcollection: require('~/model/ieltsviet/testcollection'),
-  feedback: require('~/model/ieltsviet/feedback'),
 };

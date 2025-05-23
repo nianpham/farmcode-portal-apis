@@ -1043,6 +1043,73 @@ async function getCompleteTest(id, user_id) {
   return test;
 }
 
+function transporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // TRUE for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+}
+
+function mailOptions(data) {
+  return {
+    from: {
+      name: 'IELTS Viet',
+      address: process.env.EMAIL_USER,
+    },
+    to: [`${data.user_email}`],
+    subject: 'Feedback IELTS Viet Writing Test',
+    text:
+      'Feedback IELTS Viet Writing Test for: ' + `${data.test_name}`,
+    html: ` 
+          <h1 style="color: black;">${data.test_name}</h1>
+          <h3 style="color: black;">Writing task 1 score: <strong>${data.writing_feedback[0].score}</strong></h3>
+          <p style="color: black;">
+            Teacher's feedback:
+            <span style="font-style: italic; font-weight: bold; color: black;"
+              >${data.writing_feedback[0].teacher}</span
+            >
+          </p>
+          <p style="color: black;">${data.writing_feedback[0].feedback}</p>
+          <p style="color: black;">
+            ---------------------------------------------------------------------------------------------
+          </p>
+          <h3 style="color: black;">Writing task 2 score: <strong>${data.writing_feedback[1].score}</strong></h3>
+          <p style="color: black;">
+            Teacher's feedback:
+            <span style="font-style: italic; font-weight: bold; color: black;"
+              >${data.writing_feedback[1].teacher}</span
+            >
+          </p>
+          <p style="color: black;">${data.writing_feedback[1].feedback}</p>
+          <p style="color: black;">
+            ---------------------------------------------------------------------------------------------
+          </p>
+          <h1 style="color: black;">Writing Overall: ${((parseFloat(data.writing_feedback[0].score) + parseFloat(data.writing_feedback[1].score)) / 2).toFixed(1)}</h1>
+          `,
+    attachments: [
+      // {
+      //   filename: 'test.pdf',
+      //   path: path.join(__dirname, 'test.pdf'),
+      //   contentType: 'application/pdf',
+      // },
+      {
+        filename: 'logo-ielts-viet.png',
+        path: path.join(
+          __dirname,
+          '/attachments/logo-ielts-viet.png'
+        ),
+        contentType: 'image/png',
+      },
+    ],
+  };
+}
+
 module.exports = {
   getAllCollections,
   getCollection,
