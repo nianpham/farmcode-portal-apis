@@ -151,6 +151,26 @@ function ieltsvietRoute(fastify, options, done) {
     ieltsvietController.test.getCompleteTest
   );
 
+  // Add route for PDF test generation
+  fastify.post(
+    '/test/generate-from-pdf',
+    {
+      schema: {
+        consumes: ['multipart/form-data'],
+        body: {
+          type: 'object',
+          required: ['testName', 'testType'],
+          properties: {
+            testName: { type: 'string' },
+            testType: { type: 'string', enum: ['R', 'L', 'W'] },
+            pdfFile: { type: 'string', format: 'binary' }
+          }
+        }
+      }
+    },
+    ieltsvietController.test.generateTestWithPDF
+  );
+
   done();
 }
 

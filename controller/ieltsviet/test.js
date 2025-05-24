@@ -344,6 +344,46 @@ async function getCompleteTest(request, reply) {
   }
 }
 
+async function generateTestWithPDF(request, reply) {
+  try {
+    const data = await request.file();
+    if (!data) {
+      return reply
+        .status(statusCode.badRequest)
+        .send({ message: 'PDF file is required' });
+    }
+
+    const { testName, testType } = request.body;
+    if (!testName || !testType) {
+      return reply
+        .status(statusCode.badRequest)
+        .send({ message: 'testName and testType are required' });
+    }
+
+    if (!['R', 'L', 'W'].includes(testType)) {
+      return reply
+        .status(statusCode.badRequest)
+        .send({ message: 'Invalid test type. Must be R (Reading), L (Listening), or W (Writing)' });
+    }
+
+    const fileBuffer = await data.toBuffer();
+    const result = await ieltsvietService.test.generateTestWithPDF({
+      pdfFile: fileBuffer,
+      testName,
+      testType
+    });
+
+    return reply
+      .status(statusCode.success)
+      .send({ data: result, message: successMessage.index });
+  } catch (err) {
+    console.error('Error generating test from PDF:', err);
+    reply
+      .status(statusCode.internalError)
+      .send({ message: err.message || failMessage.internalError });
+  }
+}
+
 module.exports = {
   getAllCollections,
   getCollection,
@@ -368,4 +408,5 @@ module.exports = {
   getCompleteTestByUserId,
   getCompleteTest,
   getAllUserAnswers,
+  generateTestWithPDF,
 };

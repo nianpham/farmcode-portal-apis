@@ -1030,6 +1030,88 @@ async function getCompleteTest(id, user_id) {
   return test;
 }
 
+async function generateTestWithPDF(data) {
+  try {
+    const { pdfFile, testName, testType } = data;
+    
+    if (!pdfFile || !testName || !testType) {
+      throw new Error('Missing required fields: pdfFile, testName, or testType');
+    }
+
+    // Validate test type
+    if (!['R', 'L', 'W'].includes(testType)) {
+      throw new Error('Invalid test type. Must be R (Reading), L (Listening), or W (Writing)');
+    }
+
+    // Create a new test structure
+    const testData = {
+      name: testName,
+      thumbnail: '', // You can add thumbnail handling if needed
+      time: 60, // Default time, can be made configurable
+      skill: testType,
+      parts: []
+    };
+
+    // Process PDF content based on test type
+    switch (testType) {
+      case 'R':
+        // For reading tests, we'll create parts with questions
+        testData.parts = await processReadingPDF(pdfFile);
+        break;
+      case 'L':
+        // For listening tests, we'll create parts with audio references
+        testData.parts = await processListeningPDF(pdfFile);
+        break;
+      case 'W':
+        // For writing tests, we'll create parts with writing prompts
+        testData.parts = await processWritingPDF(pdfFile);
+        break;
+    }
+
+    // Create the test using existing createSkillTest function
+    const result = await createSkillTest(testData);
+    return result;
+
+  } catch (error) {
+    throw new Error(`Failed to generate test from PDF: ${error.message}`);
+  }
+}
+
+// Helper function to process Reading PDF
+async function processReadingPDF(pdfFile) {
+  // TODO: Implement PDF text extraction and question generation
+  // This is a placeholder structure
+  return [{
+    part_num: 1,
+    image: '', // Can be extracted from PDF if contains images
+    content: '', // Will be extracted from PDF
+    questions: [] // Will be generated from content
+  }];
+}
+
+// Helper function to process Listening PDF
+async function processListeningPDF(pdfFile) {
+  // TODO: Implement PDF processing for listening tests
+  return [{
+    part_num: 1,
+    audio: '', // Audio file reference
+    questions: [] // Will be generated from content
+  }];
+}
+
+// Helper function to process Writing PDF
+async function processWritingPDF(pdfFile) {
+  // TODO: Implement PDF processing for writing tests
+  return [{
+    part_num: 1,
+    questions: [{
+      q_type: 'W',
+      image: '', // Can be extracted from PDF if contains images
+      topic: '' // Will be extracted from PDF
+    }]
+  }];
+}
+
 module.exports = {
   getAllCollections,
   getCollection,
@@ -1054,4 +1136,5 @@ module.exports = {
   getCompleteTestByUserId,
   getCompleteTest,
   getAllAnswerByUserId,
+  generateTestWithPDF,
 };
